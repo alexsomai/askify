@@ -1,19 +1,27 @@
+const path = require('path')
+const webpack = require('webpack')
+
 module.exports = {
-  entry: './src/main.js',
+  entry: [
+    'webpack-hot-middleware/client',
+    './index'
+  ],
   output: {
-    path: './src/',
-    filename: 'bundle.js'
+    path: path.join(__dirname, 'dist'),
+    filename: 'bundle.js',
+    publicPath: '/static/'
   },
-  devServer: {
-    inline: true,
-    contentBase: './src',
-    port: 3000
-  },
+  plugins: [
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin()
+  ],
   module: {
     loaders: [{
       test: /\.js$/,
       exclude: /node_modules/,
-      loader: 'babel'
+      loader: 'babel',
+      include: __dirname
     }]
   }
 }
