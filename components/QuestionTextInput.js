@@ -1,13 +1,20 @@
 import React, { Component, PropTypes } from 'react'
+import TextField from 'material-ui/lib/text-field'
+import RaisedButton from 'material-ui/lib/raised-button'
 
 export default class QuestionTextInput extends Component {
-
-  constructor(props, context) {
-    super(props, context)
+  constructor(props) {
+    super(props)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  handleSubmit(input) {
-    console.log(input);
+  getInputValue() {
+    return this.refs.input.getValue()
+  }
+
+  handleSubmit(e) {
+    e.preventDefault()
+    console.log(this.getInputValue())
     // const text = e.target.value.trim()
     // if (e.which === 13) {
       // console.log(`submiting ${text}`);
@@ -20,26 +27,20 @@ export default class QuestionTextInput extends Component {
   }
 
   render() {
-    let input
-
-  return (
-    <div>
-      <form onSubmit={e => {
-        e.preventDefault()
-        if (!input.value.trim()) {
-          return
-        }
-        console.log(input.value)
-        input.value = ''
-      }}>
-        <input ref={node => {
-          input = node
-        }} />
-        <button type="submit">
-          Add Todo
-        </button>
-      </form>
-    </div>
-  )
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <TextField
+            hintText="What do you think about ... ?"
+            floatingLabelText="Post your question"
+            multiLine={true}
+            ref="input" />
+          <br />
+          <RaisedButton
+            label="Submit"
+            type="submit" />
+        </form>
+      </div>
+    )
   }
 }

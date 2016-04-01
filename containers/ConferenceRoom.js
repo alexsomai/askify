@@ -9,8 +9,8 @@ class ConferenceRoom extends Component {
     return (
       <div>
         <h1>I have no ideea what I am doing</h1>
-        <QuestionTextInput />
         <QuestionItem />
+        <QuestionTextInput />
       </div>
     )
   }
