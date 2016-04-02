@@ -6,40 +6,49 @@ export default class QuestionTextInput extends Component {
   constructor(props) {
     super(props)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.state = {value: ''}
   }
 
-  getInputValue() {
-    return this.refs.input.getValue()
+  handleInputChange(event) {
+    this.setState({value: event.target.value})
   }
 
-  handleSubmit(e) {
-    e.preventDefault()
-    console.log(this.getInputValue())
-    // const text = e.target.value.trim()
-    // if (e.which === 13) {
-      // console.log(`submiting ${text}`);
-      // console.log('enter');
-    //   this.props.onSave(text)
-    //   if (this.props.newTodo) {
-    //     this.setState({ text: '' })
-    //   }
-    // }
+  clearInput() {
+    this.setState({value: ''})
+  }
+
+  handleSubmit() {
+    fetch('/questions', {
+      method: 'post',
+      body: JSON.stringify({
+        question: this.state.value,
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      if (response.status === 201) {
+        this.clearInput()
+      } else {
+        alert('Oops, something went wrong!')
+      }
+    })
   }
 
   render() {
     return (
       <div>
-        <form onSubmit={this.handleSubmit}>
-          <TextField
-            hintText="What do you think about ... ?"
-            floatingLabelText="Post your question"
-            multiLine={true}
-            ref="input" />
-          <br />
-          <RaisedButton
-            label="Submit"
-            type="submit" />
-        </form>
+        <TextField
+          value={this.state.value}
+          hintText="What do you think about ... ?"
+          floatingLabelText="Post your question"
+          multiLine={true}
+          onChange={this.handleInputChange} />
+        <br />
+        <RaisedButton
+          onClick={this.handleSubmit}
+          label="Submit"/>
       </div>
     )
   }
