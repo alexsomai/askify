@@ -4,7 +4,8 @@ import io from 'socket.io-client'
 import QuestionItem from './QuestionItem.js'
 
 const socket = io()
-const dataStream = Rx.Observable.fromEvent(socket, 'questions')
+const createStream = Rx.Observable.fromEvent(socket, 'create')
+const updateStream = Rx.Observable.fromEvent(socket, 'update')
 
 export default class MainSection extends Component {
   constructor(props) {
@@ -13,9 +14,13 @@ export default class MainSection extends Component {
 
   componentDidMount() {
     const { actions } = this.props
-    dataStream.subscribe(payload => {
+    createStream.subscribe(payload => {
       console.log(`payload from RX ${JSON.stringify(payload)}`)
-      actions.addQuestion(payload)
+      actions.addQuestion(payload.id, payload.text)
+    })
+    updateStream.subscribe(payload => {
+      console.log(`update paylod from RX ${JSON.stringify(payload)}`)
+      actions.voteQuestion(payload.id, payload.votes)
     })
   }
 
@@ -25,9 +30,10 @@ export default class MainSection extends Component {
     console.log(questions);
     return (
       <div>
-        <p>This will be the question?</p>
-          {questions.map(question =>
-            <QuestionItem key={number++} question={question}/>
+          {questions
+            .sort((a, b) => b.votes - a.votes)
+            .map(question =>
+              <QuestionItem key={question.id} question={question}/>
           )}
       </div>
     )

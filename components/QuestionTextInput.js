@@ -25,7 +25,7 @@ export default class QuestionTextInput extends Component {
     fetch('/questions', {
       method: 'post',
       body: JSON.stringify({
-        text: this.state.text,
+        text: this.state.text
       }),
       headers: {
         'Content-Type': 'application/json'

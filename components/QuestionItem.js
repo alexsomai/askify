@@ -20,19 +20,35 @@ const cardStyle = {
 export default class QuestionItem extends Component {
   constructor(props) {
     super(props)
+    this.handleVote = this.handleVote.bind(this)
+  }
+
+  handleVote(){
+    fetch('/question/' + this.props.question.id, {
+      method: 'put',
+      body: JSON.stringify({
+        votes: this.props.question.votes + 1
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   }
 
   render() {
     const { question } = this.props
+    const votes = `${question.votes} votes`
     return (
       <div>
       <Card style={cardStyle}>
         <CardHeader
           title="URL Avatar"
-          subtitle="3 votes"
+          subtitle={votes}
           avatar="http://lorempixel.com/100/100/nature/" />
         <CardText>
-          <IconButton iconClassName="material-icons">
+          <IconButton
+            iconClassName="material-icons"
+            onClick={this.handleVote}>
             thumb_up
           </IconButton>
           {question.text}
