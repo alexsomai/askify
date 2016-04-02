@@ -34,7 +34,7 @@ export default class QuestionTextInput extends Component {
       if (response.status === 201) {
         this.clearInput()
       } else {
-        alert('Oops, something went wrong!')
+        console.error('Oops, something went wrong!')
       }
     })
   }
@@ -43,6 +43,7 @@ export default class QuestionTextInput extends Component {
     return (
       <div>
         <TextField
+          id="question-text-field"
           value={this.state.text}
           hintText="What do you think about ... ?"
           multiLine={true}

@@ -4,8 +4,9 @@ import { connect } from 'react-redux'
 import QuestionTextInput from "../components/QuestionTextInput"
 import MainSection from "../components/MainSection"
 import * as QuestionActions from '../actions'
+import Rx from 'rx'
+import io from 'socket.io-client'
 
-import {deepOrange500} from 'material-ui/lib/styles/colors'
 import getMuiTheme from 'material-ui/lib/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/lib/MuiThemeProvider'
 import injectTapEventPlugin from 'react-tap-event-plugin'
@@ -18,16 +19,31 @@ const styles = {
   }
 }
 
-const muiTheme = getMuiTheme()
-
 class ConferenceRoom extends Component {
+  componentDidMount() {
+    this.subscribeToWebSocketEvents()
+  }
+
+  subscribeToWebSocketEvents(){
+    const socket = io()
+    const createStream$ = Rx.Observable.fromEvent(socket, 'create')
+    const updateStream$ = Rx.Observable.fromEvent(socket, 'update')
+    const { actions, questions } = this.props
+
+    const action$ = Rx.Observable.merge(
+        createStream$.map(actions.addQuestion),
+        updateStream$.map(actions.voteQuestion)
+    )
+
+    action$.subscribe(questions.dispatch)
+  }
 
   render() {
     const { questions, actions } = this.props
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
+      <MuiThemeProvider muiTheme={getMuiTheme()}>
         <div style={styles.container}>
-          <h1>I have no ideea what I am doing</h1>
+          <h1>I do have a bit of ideea about what I'm doing</h1>
           <MainSection questions={questions} actions={actions} />
           <QuestionTextInput />
         </div>

@@ -1,8 +1,18 @@
-import { createStore, applyMiddleware } from 'redux'
-// import thunk from 'redux-thunk'
+import { createStore, applyMiddleware, compose } from 'redux'
+import thunk from 'redux-thunk'
+import createLogger from 'redux-logger'
 // import api from '../middleware/api'
 import rootReducer from '../reducers'
+import DevTools from '../containers/DevTools'
 
-export default function configureStore() {
-  return createStore(rootReducer)
+export default function configureStore(initialState) {
+  return createStore(
+    rootReducer,
+    initialState,
+    compose(
+      applyMiddleware(thunk, createLogger()),
+      DevTools.instrument()
+    ))
+
+  return store
 }

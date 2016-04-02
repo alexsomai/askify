@@ -1,16 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 
-import Card from 'material-ui/lib/card/card';
-import CardActions from 'material-ui/lib/card/card-actions';
-import CardHeader from 'material-ui/lib/card/card-header';
-import CardMedia from 'material-ui/lib/card/card-media';
-import CardTitle from 'material-ui/lib/card/card-title';
-import FlatButton from 'material-ui/lib/flat-button';
-import CardText from 'material-ui/lib/card/card-text';
-
-import FontIcon from 'material-ui/lib/font-icon';
-import IconButton from 'material-ui/lib/icon-button';
-import ActionHome from 'material-ui/lib/svg-icons/action/favorite';
+import Card from 'material-ui/lib/card/card'
+import CardHeader from 'material-ui/lib/card/card-header'
+import CardText from 'material-ui/lib/card/card-text'
+import IconButton from 'material-ui/lib/icon-button'
 
 const cardStyle = {
   margin: '0 auto',
