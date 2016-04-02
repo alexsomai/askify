@@ -1,39 +1,35 @@
 'use strict'
-
-const webpack = require('webpack')
-const webpackDevMiddleware = require('webpack-dev-middleware')
-const webpackHotMiddleware = require('webpack-hot-middleware')
-const config = require('./webpack.config')
-
 const app = require('express')()
+const server = require('http').Server(app)
 const bodyParser = require('body-parser')
 const port = 3000
+
+const questions = []
 
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
+const webpack = require('webpack')
+const webpackDevMiddleware = require('webpack-dev-middleware')
+const webpackHotMiddleware = require('webpack-hot-middleware')
+
+const config = require('./webpack.config')
 const compiler = webpack(config)
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
 app.use(webpackHotMiddleware(compiler))
 
-const http = require('http').Server(app)
-const io = require('socket.io')(http)
-
-const questions = []
-
-app.post('/questions', function (req, res, next) {
+app.post('/questions', (req, res, next) => {
   let question = req.body
   questions.push(questions)
-  console.log(questions)
   io.emit('questions', question)
   res.sendStatus(201)
 })
 
-app.use(function(req, res) {
+app.use((req, res) => {
   res.sendFile(__dirname + '/index.html')
 })
 
-app.listen(port, function(error) {
+server.listen(port, error => {
   if (error) {
     console.error(error)
   } else {
@@ -41,12 +37,7 @@ app.listen(port, function(error) {
   }
 })
 
-
-// Websocket ===================================================================
-io.on('connection', function(socket){
-  console.log('connected lol')
+const io = require('socket.io')(server)
+io.on('connection', socket => {
+  console.log('user connected')
 })
-
-io.on('questions', function(msg){
-  console.log('eeee');
-  });
