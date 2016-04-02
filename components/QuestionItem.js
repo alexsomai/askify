@@ -1,26 +1,49 @@
 import React, { Component, PropTypes } from 'react'
-import Rx from 'rx'
-import io from 'socket.io-client'
 
-const socket = io()
-const dataStream = Rx.Observable.fromEvent(socket, 'questions')
+import Card from 'material-ui/lib/card/card';
+import CardActions from 'material-ui/lib/card/card-actions';
+import CardHeader from 'material-ui/lib/card/card-header';
+import CardMedia from 'material-ui/lib/card/card-media';
+import CardTitle from 'material-ui/lib/card/card-title';
+import FlatButton from 'material-ui/lib/flat-button';
+import CardText from 'material-ui/lib/card/card-text';
+
+import FontIcon from 'material-ui/lib/font-icon';
+import IconButton from 'material-ui/lib/icon-button';
+import ActionHome from 'material-ui/lib/svg-icons/action/favorite';
+
+const cardStyle = {
+  margin: '0 auto',
+  width: '40vw'
+}
 
 export default class QuestionItem extends Component {
   constructor(props) {
     super(props)
   }
 
-  componentDidMount() {
-    dataStream.subscribe(payload => {
-      console.log(`payload from RX ${JSON.stringify(payload)}`)
-    })
-  }
-
   render() {
+    const { question } = this.props
     return (
       <div>
-        <p>This will be the question?</p>
+      <Card style={cardStyle}>
+        <CardHeader
+          title="URL Avatar"
+          subtitle="3 votes"
+          avatar="http://lorempixel.com/100/100/nature/" />
+        <CardText>
+          <IconButton iconClassName="material-icons">
+            thumb_up
+          </IconButton>
+          {question.text}
+        </CardText>
+      </Card>
+      <br />
       </div>
     )
   }
+}
+
+QuestionItem.propTypes = {
+  question: PropTypes.object.isRequired
 }

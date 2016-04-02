@@ -6,23 +6,26 @@ export default class QuestionTextInput extends Component {
   constructor(props) {
     super(props)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleInputChange = this.handleInputChange.bind(this)
-    this.state = {value: ''}
+    this.handleChange = this.handleChange.bind(this)
+    this.state = {text: ''}
   }
 
-  handleInputChange(event) {
-    this.setState({value: event.target.value})
+  handleChange(event) {
+    this.setState({text: event.target.value})
   }
 
   clearInput() {
-    this.setState({value: ''})
+    this.setState({text: ''})
   }
 
   handleSubmit() {
+    const text = this.state.text.trim()
+    if(!text) return
+
     fetch('/questions', {
       method: 'post',
       body: JSON.stringify({
-        question: this.state.value,
+        text: this.state.text,
       }),
       headers: {
         'Content-Type': 'application/json'
@@ -40,11 +43,10 @@ export default class QuestionTextInput extends Component {
     return (
       <div>
         <TextField
-          value={this.state.value}
+          value={this.state.text}
           hintText="What do you think about ... ?"
-          floatingLabelText="Post your question"
           multiLine={true}
-          onChange={this.handleInputChange} />
+          onChange={this.handleChange} />
         <br />
         <RaisedButton
           onClick={this.handleSubmit}
