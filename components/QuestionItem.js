@@ -5,9 +5,16 @@ import CardHeader from 'material-ui/lib/card/card-header'
 import CardText from 'material-ui/lib/card/card-text'
 import IconButton from 'material-ui/lib/icon-button'
 
-const cardStyle = {
-  margin: '0 auto',
-  width: '40vw'
+const style = {
+  margin: '12px auto',
+  width: '40vw',
+  header: {
+    padding: '16px 0 0 16px'
+  },
+  text: {
+    fontSize: 'inherit',
+    padding: 0
+  }
 }
 
 export default class QuestionItem extends Component {
@@ -32,13 +39,12 @@ export default class QuestionItem extends Component {
     const { question } = this.props
     const votes = `${question.votes} votes`
     return (
-      <div>
-      <Card style={cardStyle}>
-        <CardHeader
-          title="URL Avatar"
+      <Card style={style}>
+        <CardHeader style={style.header}
+          title="username"
           subtitle={votes}
           avatar="http://lorempixel.com/100/100/nature/" />
-        <CardText>
+        <CardText style={style.text}>
           <IconButton
             iconClassName="material-icons"
             onClick={this.handleVote}>
@@ -47,8 +53,6 @@ export default class QuestionItem extends Component {
           {question.text}
         </CardText>
       </Card>
-      <br />
-      </div>
     )
   }
 }

@@ -1,11 +1,17 @@
 import React, { Component, PropTypes } from 'react'
 import QuestionItem from './QuestionItem.js'
 
+const style = {
+  position: 'absolute',
+  left: '50%',
+  transform: 'translate(-50%)'
+}
+
 export default class MainSection extends Component {
   render() {
     const { questions, actions } = this.props
     return (
-      <div>
+      <div style={style}>
           {questions
             .sort((a, b) => b.votes - a.votes)
             .map(question =>

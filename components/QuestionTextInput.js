@@ -2,6 +2,12 @@ import React, { Component, PropTypes } from 'react'
 import TextField from 'material-ui/lib/text-field'
 import RaisedButton from 'material-ui/lib/raised-button'
 
+const style = {
+  position: 'fixed',
+  bottom: 0,
+  padding: 23
+}
+
 export default class QuestionTextInput extends Component {
   constructor(props) {
     super(props)
@@ -41,16 +47,18 @@ export default class QuestionTextInput extends Component {
 
   render() {
     return (
-      <div>
+      <div style={style}>
         <TextField
           id="question-text-field"
           value={this.state.text}
           hintText="What do you think about ... ?"
+          floatingLabelText="Question"
           multiLine={true}
           onChange={this.handleChange} />
-        <br />
+        <br/>
         <RaisedButton
           onClick={this.handleSubmit}
+          primary={true}
           label="Submit"/>
       </div>
     )
