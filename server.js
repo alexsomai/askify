@@ -1,5 +1,6 @@
 'use strict'
-const app = require('express')()
+const express = require('express')
+const app = express()
 const server = require('http').Server(app)
 const bodyParser = require('body-parser')
 const port = 3000
@@ -41,7 +42,8 @@ app.put('/question/:id', (req, res, next) => {
   res.sendStatus(200)
 })
 
-app.use((req, res) => res.sendFile(__dirname + '/index.html'))
+app.use(express.static(__dirname + '/public'));
+app.use((req, res) => res.sendFile(__dirname + '/public/index.html'))
 
 const io = require('socket.io')(server)
 io.on('connection', socket => console.log('user connected'))
