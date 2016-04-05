@@ -21,6 +21,10 @@ app.use(webpackHotMiddleware(compiler))
 
 let questionId = 0
 
+app.get('/questions', (req, res, next) => {
+  res.json(questions)
+})
+
 app.post('/questions', (req, res, next) => {
   let question = req.body
   question.id = '' + ++questionId

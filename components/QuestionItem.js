@@ -42,7 +42,7 @@ export default class QuestionItem extends Component {
         <CardHeader style={style.header}
           title="username"
           subtitle={votes}
-          avatar="http://lorempixel.com/100/100/nature/" />
+          avatar="http://passport.mobilenations.com/avatars/000/005/883/100x100_5883519.jpg" />
         <CardText style={style.text}>
           <IconButton
             iconClassName="material-icons"

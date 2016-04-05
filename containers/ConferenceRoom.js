@@ -20,15 +20,15 @@ class ConferenceRoom extends Component {
 
   subscribeToEvents() {
     const socket = io()
+    const { questions, actions, room } = this.props
 
     const createStream$ = Rx.Observable
       .fromEvent(socket, 'create')
-      .filter(item => item.room === this.props.inputValue)
+      .filter(item => item.room === room)
     const updateStream$ = Rx.Observable
       .fromEvent(socket, 'update')
-      .filter(item => item.room === this.props.inputValue)
+      .filter(item => item.room === room)
 
-    const { actions, questions } = this.props
     const action$ = Rx.Observable.merge(
       createStream$.map(actions.addQuestion),
       updateStream$.map(actions.voteQuestion)
@@ -41,11 +41,11 @@ class ConferenceRoom extends Component {
   }
 
   render() {
-    const { questions, actions, inputValue } = this.props
+    const { questions, actions, room } = this.props
     return (
       <div>
-        <MainSection questions={questions} actions={actions} />
-        <QuestionTextInput room={inputValue} />
+        <MainSection questions={questions} actions={actions} room={room}/>
+        <QuestionTextInput room={room} />
       </div>
     )
   }
@@ -54,13 +54,13 @@ class ConferenceRoom extends Component {
 ConferenceRoom.propTypes = {
   questions: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
-  inputValue: PropTypes.string.isRequired
+  room: PropTypes.string.isRequired
 }
 
 function mapStateToProps(state, ownProps) {
   return {
     questions: state.questions,
-    inputValue: ownProps.location.pathname
+    room: ownProps.location.pathname
   }
 }
 

@@ -24,7 +24,11 @@ export default class JoinRoom extends Component {
   }
 
   joinRoom() {
-    browserHistory.push(this.state.text)
+    const text = this.state.text.trim()
+    if(!text) {
+      return
+    }
+    browserHistory.push(`/${text}`)
   }
 
   render() {
