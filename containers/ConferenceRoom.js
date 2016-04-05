@@ -10,34 +10,42 @@ import io from 'socket.io-client'
 let subscribtion
 
 class ConferenceRoom extends Component {
+  constructor(props) {
+    super(props)
+  }
+
   componentDidMount() {
     this.subscribeToEvents()
   }
 
-  subscribeToEvents(){
+  subscribeToEvents() {
     const socket = io()
-    const createStream$ = Rx.Observable.fromEvent(socket, 'create')
-    const updateStream$ = Rx.Observable.fromEvent(socket, 'update')
-    const { actions, questions } = this.props
 
+    const createStream$ = Rx.Observable
+      .fromEvent(socket, 'create')
+      .filter(item => item.room === this.props.inputValue)
+    const updateStream$ = Rx.Observable
+      .fromEvent(socket, 'update')
+      .filter(item => item.room === this.props.inputValue)
+
+    const { actions, questions } = this.props
     const action$ = Rx.Observable.merge(
       createStream$.map(actions.addQuestion),
       updateStream$.map(actions.voteQuestion)
     )
-
     subscribtion = action$.subscribe(questions.dispatch)
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     subscribtion.dispose()
   }
 
   render() {
-    const { questions, actions } = this.props
+    const { questions, actions, inputValue } = this.props
     return (
       <div>
         <MainSection questions={questions} actions={actions} />
-        <QuestionTextInput />
+        <QuestionTextInput room={inputValue} />
       </div>
     )
   }
@@ -45,12 +53,14 @@ class ConferenceRoom extends Component {
 
 ConferenceRoom.propTypes = {
   questions: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  inputValue: PropTypes.string.isRequired
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
-    questions: state.questions
+    questions: state.questions,
+    inputValue: ownProps.location.pathname
   }
 }
 

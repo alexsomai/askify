@@ -15,10 +15,16 @@ export default class JoinRoom extends Component {
   constructor(props) {
     super(props)
     this.joinRoom = this.joinRoom.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.state = {text: ''}
+  }
+
+  handleChange(event) {
+    this.setState({text: event.target.value})
   }
 
   joinRoom() {
-    browserHistory.push('blabla')
+    browserHistory.push(this.state.text)
   }
 
   render() {
@@ -26,6 +32,8 @@ export default class JoinRoom extends Component {
       <div style={style}>
         <TextField
           id="join-room-text-field"
+          value={this.state.text}
+          onChange={this.handleChange}
           hintText="conference-room-1"
           floatingLabelText="Conference Room" />
         <br/>

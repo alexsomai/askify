@@ -26,12 +26,15 @@ export default class QuestionTextInput extends Component {
 
   handleSubmit() {
     const text = this.state.text.trim()
-    if(!text) return
+    if(!text) {
+      return
+    }
 
     fetch('/questions', {
       method: 'post',
       body: JSON.stringify({
-        text: this.state.text
+        text: this.state.text,
+        room: this.props.room
       }),
       headers: {
         'Content-Type': 'application/json'
@@ -63,4 +66,8 @@ export default class QuestionTextInput extends Component {
       </div>
     )
   }
+}
+
+QuestionTextInput.propTypes = {
+  room: PropTypes.string.isRequired
 }
