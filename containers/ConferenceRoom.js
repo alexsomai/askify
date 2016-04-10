@@ -6,19 +6,22 @@ import MainSection from "../components/MainSection"
 import * as QuestionActions from '../actions'
 import Rx from 'rx'
 import io from 'socket.io-client'
+import { Link } from 'react-router'
 
 let subscribtion
+
+function loadData(props) {
+  const { actions, room } = props
+  actions.loadQuestions(room)
+}
 
 class ConferenceRoom extends Component {
   constructor(props) {
     super(props)
   }
 
-  componentWillMount(){
-    /* WORST APPROACH! This is a TEMPORARY solution to populate the initial store.
-    Later, redux middleware should be used! Also remove the afferent action methods
-    and reducer switch case marked with 'TEMPORARY' */
-    this.props.actions.getAllQuestions(this.props.room)
+  componentWillMount() {
+    loadData(this.props)
   }
 
   componentDidMount() {
@@ -30,10 +33,15 @@ class ConferenceRoom extends Component {
   }
 
   render() {
-    const { questions, actions, room } = this.props
+    const { questions, actions, room, status } = this.props
+
     return (
       <div>
-        <MainSection questions={questions[room]} actions={actions} room={room}/>
+        <Link to="/">Home</Link>
+        <MainSection
+          questions={questions[room]}
+          room={room}
+          isFetching={status.isFetching} />
         <QuestionTextInput room={room} />
       </div>
     )
@@ -61,13 +69,20 @@ class ConferenceRoom extends Component {
 ConferenceRoom.propTypes = {
   questions: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
+  status: PropTypes.object.isRequired,
   room: PropTypes.string.isRequired
 }
 
+ConferenceRoom.defaultProps = {
+  status: { isFetching: false }
+}
+
 function mapStateToProps(state, ownProps) {
+  const room = ownProps.location.pathname
   return {
     questions: state.questions,
-    room: ownProps.location.pathname
+    status: state.status.questions[room],
+    room: room
   }
 }
 

@@ -1,28 +1,28 @@
 import * as types from '../constants/ActionTypes'
+import { CALL_API } from '../middleware/api'
 
-/* TEMPORARY */
-export function getAllQuestions(room) {
-  return dispatch => {
-    fetch(`questions${room}`, {
-      method: 'get',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
-      if (response.ok) {
-        return response.json()
-      }
-    }).then(questions => {
-      dispatch(receiveQuestions(questions))
-    })
+// Fetches all the questions from the given room
+// Relies on the custom API middleware defined in ../middleware/api.js.
+function fetchQuestions(room) {
+  return {
+    room,
+    [CALL_API]: {
+      types: [ types.QUESTIONS_REQUEST, types.QUESTIONS_SUCCESS, types.QUESTIONS_FAILURE ],
+      endpoint: `questions${room}`
+    }
   }
 }
 
-/* TEMPORARY */
-function receiveQuestions(questions) {
-  return {
-    type: "RECEIVE_QUESTIONS",
-    questions: questions
+// Fetches all the questions from the given room unless they are cached.
+// Relies on Redux Thunk middleware.
+export function loadQuestions(room) {
+  return (dispatch, getState) => {
+    const questions = getState().questions[room]
+    if (questions) {
+      return null
+    }
+
+    return dispatch(fetchQuestions(room))
   }
 }
 

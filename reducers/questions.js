@@ -1,14 +1,14 @@
 import { ADD_QUESTION, VOTE_QUESTION } from '../constants/ActionTypes'
 import merge from 'lodash/merge'
 
-export default function todos(state = {}, action) {
+export default function questions(state = {}, action) {
+  if (action.response) {
+    // this is the initial request, when are fetched all the questions from the API
+    return merge({}, state, action.response)
+  }
+
   const question = action.payload
-
   switch (action.type) {
-
-    /* TEMPORARY */
-    case "RECEIVE_QUESTIONS":
-      return merge({}, state, action.questions)
 
     case ADD_QUESTION:
       state[question.room].push({

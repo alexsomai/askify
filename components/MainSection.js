@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react'
 import QuestionItem from './QuestionItem'
-import { Link } from 'react-router'
 
 const style = {
   position: 'absolute',
@@ -10,10 +9,26 @@ const style = {
 
 export default class MainSection extends Component {
   render() {
-    const { questions, actions, room } = this.props
+    const { questions, room, isFetching } = this.props
+
+    if (isFetching) {
+      return (
+        <div style={style}>
+          <h1><i>Loading questions from '{room}' conference room...</i></h1>
+        </div>
+      )
+    }
+
+    if (questions.length === 0) {
+      return (
+        <div style={style}>
+          <h1>Conference room '{room}' has no questions yet</h1>
+        </div>
+      )
+    }
+
     return (
       <div style={style}>
-        <Link to="/">Home</Link>
         {questions
           .sort((a, b) => b.votes - a.votes)
           .map(question =>
@@ -26,8 +41,8 @@ export default class MainSection extends Component {
 
 MainSection.propTypes = {
   questions: PropTypes.array,
-  actions: PropTypes.object.isRequired,
-  room: PropTypes.string.isRequired
+  room: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool.isRequired
 }
 
 MainSection.defaultProps = {
