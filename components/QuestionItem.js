@@ -22,11 +22,13 @@ export default class QuestionItem extends Component {
     this.handleVote = this.handleVote.bind(this)
   }
 
-  handleVote(){
-    fetch('/question/' + this.props.question.id, {
+  handleVote() {
+    const { question, room } = this.props
+
+    fetch(`/question${room}/${question.id}`, {
       method: 'put',
       body: JSON.stringify({
-        votes: this.props.question.votes + 1
+        votes: question.votes + 1
       }),
       headers: {
         'Content-Type': 'application/json'
@@ -57,5 +59,6 @@ export default class QuestionItem extends Component {
 }
 
 QuestionItem.propTypes = {
+  room: PropTypes.string.isRequired,
   question: PropTypes.object.isRequired
 }

@@ -14,8 +14,29 @@ class ConferenceRoom extends Component {
     super(props)
   }
 
+  componentWillMount(){
+    /* WORST APPROACH! This is a TEMPORARY solution to populate the initial store.
+    Later, redux middleware should be used! Also remove the afferent action methods
+    and reducer switch case marked with 'TEMPORARY' */
+    this.props.actions.getAllQuestions(this.props.room)
+  }
+
   componentDidMount() {
     this.subscribeToEvents()
+  }
+
+  componentWillUnmount() {
+    subscribtion.dispose()
+  }
+
+  render() {
+    const { questions, actions, room } = this.props
+    return (
+      <div>
+        <MainSection questions={questions[room]} actions={actions} room={room}/>
+        <QuestionTextInput room={room} />
+      </div>
+    )
   }
 
   subscribeToEvents() {
@@ -35,24 +56,10 @@ class ConferenceRoom extends Component {
     )
     subscribtion = action$.subscribe(questions.dispatch)
   }
-
-  componentWillUnmount() {
-    subscribtion.dispose()
-  }
-
-  render() {
-    const { questions, actions, room } = this.props
-    return (
-      <div>
-        <MainSection questions={questions} actions={actions} room={room}/>
-        <QuestionTextInput room={room} />
-      </div>
-    )
-  }
 }
 
 ConferenceRoom.propTypes = {
-  questions: PropTypes.array.isRequired,
+  questions: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
   room: PropTypes.string.isRequired
 }

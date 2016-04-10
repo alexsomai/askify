@@ -15,10 +15,9 @@ export default class MainSection extends Component {
       <div style={style}>
         <Link to="/">Home</Link>
         {questions
-          .filter(item => item.room === room)
           .sort((a, b) => b.votes - a.votes)
           .map(question =>
-            <QuestionItem key={question.id} question={question}/>
+            <QuestionItem key={question.id} question={question} room={room}/>
         )}
       </div>
     )
@@ -26,7 +25,11 @@ export default class MainSection extends Component {
 }
 
 MainSection.propTypes = {
-  questions: PropTypes.array.isRequired,
+  questions: PropTypes.array,
   actions: PropTypes.object.isRequired,
   room: PropTypes.string.isRequired
+}
+
+MainSection.defaultProps = {
+  questions: []
 }

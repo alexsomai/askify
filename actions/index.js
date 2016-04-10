@@ -1,16 +1,16 @@
 import * as types from '../constants/ActionTypes'
 
 /* TEMPORARY */
-export function getAllQuestions() {
+export function getAllQuestions(room) {
   return dispatch => {
-    fetch('questions', {
+    fetch(`questions${room}`, {
       method: 'get',
       headers: {
         'Content-Type': 'application/json'
       }
-    }).then(res => {
-      if (res.ok) {
-        return res.json()
+    }).then(response => {
+      if (response.ok) {
+        return response.json()
       }
     }).then(questions => {
       dispatch(receiveQuestions(questions))
