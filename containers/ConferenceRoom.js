@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import QuestionTextInput from "../components/QuestionTextInput"
-import MainSection from "../components/MainSection"
+import QuestionTextInput from '../components/QuestionTextInput'
+import MainSection from '../components/MainSection'
+import HomeButton from '../components/HomeButton'
 import * as QuestionActions from '../actions'
 import Rx from 'rx'
 import io from 'socket.io-client'
@@ -37,7 +38,7 @@ class ConferenceRoom extends Component {
 
     return (
       <div>
-        <Link to="/">Home</Link>
+        <HomeButton />
         <MainSection
           questions={questions[room]}
           room={room}
