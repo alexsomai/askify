@@ -1,7 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import TextField from 'material-ui/lib/text-field'
 import RaisedButton from 'material-ui/lib/raised-button'
-import { browserHistory } from 'react-router'
 
 const style = {
     position: 'absolute',
@@ -14,21 +13,21 @@ const style = {
 export default class JoinRoom extends Component {
   constructor(props) {
     super(props)
-    this.joinRoom = this.joinRoom.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
-    this.state = {text: ''}
+    this.state = { text: '' }
   }
 
   handleChange(event) {
-    this.setState({text: event.target.value})
+    this.setState({ text: event.target.value })
   }
 
-  joinRoom() {
-    const text = this.state.text.trim()
-    if(!text) {
-      return
-    }
-    browserHistory.push(`/${text}`)
+  getInputValue() {
+    return this.state.text.trim()
+  }
+
+  handleSubmit() {
+    this.props.onSubmit(this.getInputValue())
   }
 
   render() {
@@ -44,8 +43,12 @@ export default class JoinRoom extends Component {
         <RaisedButton
           label="Join"
           primary={true}
-          onClick={this.joinRoom}/>
+          onClick={this.handleSubmit}/>
       </div>
     )
   }
+}
+
+JoinRoom.propTypes = {
+  onSubmit: PropTypes.func.isRequired
 }

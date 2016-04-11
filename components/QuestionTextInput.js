@@ -13,39 +13,24 @@ export default class QuestionTextInput extends Component {
     super(props)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
-    this.state = {text: ''}
+    this.state = { text: '' }
   }
 
   handleChange(event) {
-    this.setState({text: event.target.value})
+    this.setState({ text: event.target.value })
+  }
+
+  getInputValue() {
+    return this.state.text.trim()
   }
 
   clearInput() {
-    this.setState({text: ''})
+    this.setState({ text: '' })
   }
 
   handleSubmit() {
-    const text = this.state.text.trim()
-    if(!text) {
-      return
-    }
-
-    fetch('/questions', {
-      method: 'post',
-      body: JSON.stringify({
-        text: this.state.text,
-        room: this.props.room
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
-      if (response.status === 201) {
-        this.clearInput()
-      } else {
-        console.error('Oops, something went wrong!')
-      }
-    })
+    this.props.onSubmit(this.getInputValue())
+    this.clearInput()
   }
 
   render() {
@@ -69,5 +54,5 @@ export default class QuestionTextInput extends Component {
 }
 
 QuestionTextInput.propTypes = {
-  room: PropTypes.string.isRequired
+  onSubmit: PropTypes.func.isRequired
 }

@@ -1,15 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import * as QuestionActions from '../actions'
+import { subscribe, unsubscribe } from '../middleware/socket-util'
+
 import QuestionTextInput from '../components/QuestionTextInput'
 import MainSection from '../components/MainSection'
 import HomeButton from '../components/HomeButton'
-import * as QuestionActions from '../actions'
-import Rx from 'rx'
-import io from 'socket.io-client'
-import { Link } from 'react-router'
-
-let subscribtion
 
 function loadData(props) {
   const { actions, room } = props
@@ -19,6 +16,8 @@ function loadData(props) {
 class ConferenceRoom extends Component {
   constructor(props) {
     super(props)
+    this.submitQuestion = this.submitQuestion.bind(this)
+    this.voteQuestion = this.voteQuestion.bind(this)
   }
 
   componentWillMount() {
@@ -26,11 +25,41 @@ class ConferenceRoom extends Component {
   }
 
   componentDidMount() {
-    this.subscribeToEvents()
+    subscribe(this.props)
   }
 
   componentWillUnmount() {
-    subscribtion.dispose()
+    unsubscribe()
+  }
+
+  submitQuestion(text) {
+    if(!text) {
+      return
+    }
+
+    const { room } = this.props
+    fetch('/questions', {
+      method: 'post',
+      body: JSON.stringify({ text, room }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
+  voteQuestion(question) {
+    const { room } = this.props
+    const { id, votes } = question
+
+    fetch(`/question${room}/${id}`, {
+      method: 'put',
+      body: JSON.stringify({
+        votes: votes + 1
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   }
 
   render() {
@@ -41,29 +70,13 @@ class ConferenceRoom extends Component {
         <HomeButton />
         <MainSection
           questions={questions[room]}
-          room={room}
-          isFetching={status.isFetching} />
-        <QuestionTextInput room={room} />
+          isFetching={status.isFetching}
+          onVoteQuestion={this.voteQuestion}
+          loadingLabel={`Loading questions for '${room}' conference room...`}
+          emptyRoomLabel={`Conference room '${room}' has no questions yet`} />
+        <QuestionTextInput onSubmit={this.submitQuestion} />
       </div>
     )
-  }
-
-  subscribeToEvents() {
-    const socket = io()
-    const { questions, actions, room } = this.props
-
-    const createStream$ = Rx.Observable
-      .fromEvent(socket, 'create')
-      .filter(item => item.room === room)
-    const updateStream$ = Rx.Observable
-      .fromEvent(socket, 'update')
-      .filter(item => item.room === room)
-
-    const action$ = Rx.Observable.merge(
-      createStream$.map(actions.addQuestion),
-      updateStream$.map(actions.voteQuestion)
-    )
-    subscribtion = action$.subscribe(questions.dispatch)
   }
 }
 

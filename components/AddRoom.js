@@ -10,7 +10,6 @@ const style = {
 }
 
 export default class AddRoom extends Component {
-
   render() {
     return (
       <div style={style}>

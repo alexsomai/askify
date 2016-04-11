@@ -9,12 +9,15 @@ const style = {
 
 export default class MainSection extends Component {
   render() {
-    const { questions, room, isFetching } = this.props
+    const {
+      questions, isFetching, loadingLabel,
+      emptyRoomLabel, onVoteQuestion
+    } = this.props
 
     if (isFetching) {
       return (
         <div style={style}>
-          <h1><i>Loading questions from '{room}' conference room...</i></h1>
+          <h1><i>{loadingLabel}</i></h1>
         </div>
       )
     }
@@ -22,7 +25,7 @@ export default class MainSection extends Component {
     if (questions.length === 0) {
       return (
         <div style={style}>
-          <h1>Conference room '{room}' has no questions yet</h1>
+          <h1>{emptyRoomLabel}</h1>
         </div>
       )
     }
@@ -32,7 +35,10 @@ export default class MainSection extends Component {
         {questions
           .sort((a, b) => b.votes - a.votes)
           .map(question =>
-            <QuestionItem key={question.id} question={question} room={room}/>
+            <QuestionItem
+              key={question.id}
+              question={question}
+              onThumbUp={onVoteQuestion} />
         )}
       </div>
     )
@@ -41,8 +47,10 @@ export default class MainSection extends Component {
 
 MainSection.propTypes = {
   questions: PropTypes.array,
-  room: PropTypes.string.isRequired,
-  isFetching: PropTypes.bool.isRequired
+  isFetching: PropTypes.bool.isRequired,
+  loadingLabel: PropTypes.string.isRequired,
+  emptyRoomLabel: PropTypes.string.isRequired,
+  onVoteQuestion: PropTypes.func.isRequired
 }
 
 MainSection.defaultProps = {

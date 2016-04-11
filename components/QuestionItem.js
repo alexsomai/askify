@@ -23,17 +23,7 @@ export default class QuestionItem extends Component {
   }
 
   handleVote() {
-    const { question, room } = this.props
-
-    fetch(`/question${room}/${question.id}`, {
-      method: 'put',
-      body: JSON.stringify({
-        votes: question.votes + 1
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    this.props.onThumbUp(this.props.question)
   }
 
   render() {
@@ -59,6 +49,6 @@ export default class QuestionItem extends Component {
 }
 
 QuestionItem.propTypes = {
-  room: PropTypes.string.isRequired,
-  question: PropTypes.object.isRequired
+  question: PropTypes.object.isRequired,
+  onThumbUp: PropTypes.func.isRequired
 }

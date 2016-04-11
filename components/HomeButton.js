@@ -8,7 +8,6 @@ const style = {
 }
 
 export default class HomeButton extends Component {
-
   render() {
     return (
       <div style={style}>

@@ -45,7 +45,7 @@ app.post('/questions', (req, res, next) => {
 
   const response = newQuestion
   response.room = room
-  io.emit('create', response)
+  io.emit('question:create', response)
 
   res.status(201)
   res.json(response)
@@ -64,7 +64,7 @@ app.put('/question/:room/:id', (req, res, next) => {
         updatedQuestion.room = room
     })
 
-  io.emit('update', updatedQuestion)
+  io.emit('question:update', updatedQuestion)
   res.json(updatedQuestion)
 })
 
@@ -72,7 +72,13 @@ app.use(express.static(__dirname + '/public'));
 app.use((req, res) => res.sendFile(__dirname + '/public/index.html'))
 
 const io = require('socket.io')(server)
-io.on('connection', socket => console.log('user connected'))
+io.on('connection', socket => {
+  console.log(`User connected. Socket id ${socket.id}`)
+
+  socket.on('disconnect', () => {
+    console.log(`User diconnected. Socket id ${socket.id}`)
+  })
+})
 
 server.listen(port)
 
