@@ -3,6 +3,7 @@ import { Provider } from 'react-redux'
 import { Router } from 'react-router'
 import routes from '../routes'
 import DevTools from './DevTools'
+import AppBar from '../containers/AppBar'
 
 export default class Root extends Component {
   render() {
@@ -10,6 +11,7 @@ export default class Root extends Component {
     return (
       <Provider store={store}>
         <div>
+          <AppBar />
           <Router history={history} routes={routes} />
           <DevTools />
         </div>

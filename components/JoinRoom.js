@@ -43,7 +43,7 @@ export default class JoinRoom extends Component {
         <RaisedButton
           label="Join"
           primary={true}
-          onClick={this.handleSubmit}/>
+          onClick={this.handleSubmit} />
       </div>
     )
   }
