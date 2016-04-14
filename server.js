@@ -34,7 +34,8 @@ r.connect( {host: 'localhost', port: 28015}, function(err, conn) {
               'room': 'conference-room-1',
               'text': 'What is your favourite programming language?',
               'user_id': 'auth0|570d391f3f062e8f16a7aa7a',
-              'votes': 0
+              'votes': 0,
+              'voted_by': []
             },
             {
               'email': 'alex_somai@yahoo.com',
@@ -44,7 +45,8 @@ r.connect( {host: 'localhost', port: 28015}, function(err, conn) {
               'room': 'conference-room-1',
               'text': 'Why do you like Java?',
               'user_id': 'auth0|570d391f3f062e8f16a7aa7a',
-              'votes': 2
+              'votes': 2,
+              'voted_by': []
             }
           ]).run(connection, function(err, result) {
               if (err) throw err
@@ -123,7 +125,8 @@ app.post('/questions', (req, res, next) => {
       picture: profile.picture,
       name: profile.name,
       email: profile.email,
-      nickname: profile.nickname
+      nickname: profile.nickname,
+      voted_by: []
     })
     .run(connection, function(err, result) {
         if (err) throw err
@@ -134,15 +137,30 @@ app.post('/questions', (req, res, next) => {
 })
 
 app.put('/question/:room/:id', (req, res, next) => {
+  const id_token = req.headers['authorization'].split(' ')[1]
   const room = req.params.room
   const id = req.params.id
 
-  r.table('questions').get(id).update({votes: req.body.votes})
-    .run(connection, function(err, result) {
-      if (err) throw err
-      console.log(JSON.stringify(result, null, 2))
-      res.sendStatus(200)
+  fetch('https://alexsomai.eu.auth0.com/tokeninfo', {
+    method: 'post',
+    body: JSON.stringify({ id_token }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(function(response) {
+		return response.json()
+	}).then(function(json) {
+    const profile = json
+    r.table('questions').get(id)
+      .update({
+        votes: req.body.votes,
+        voted_by: r.row('voted_by').append(profile.user_id)
+      }).run(connection, function(err, result) {
+        if (err) throw err
+        console.log(JSON.stringify(result, null, 2))
+        res.sendStatus(200)
     })
+  })
 })
 
 app.use(express.static(__dirname + '/public'))

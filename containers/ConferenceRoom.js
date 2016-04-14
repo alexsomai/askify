@@ -58,6 +58,7 @@ class ConferenceRoom extends Component {
         votes: votes + 1
       }),
       headers: {
+        'Authorization': `Bearer ${localStorage.getItem('id_token')}`,
         'Content-Type': 'application/json'
       }
     })
