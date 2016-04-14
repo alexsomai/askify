@@ -51,7 +51,7 @@ class ConferenceRoom extends Component {
     const { room } = this.props
     const { id, votes } = question
 
-    fetch(`/question${room}/${id}`, {
+    fetch(`/question/${room}/${id}`, {
       method: 'put',
       body: JSON.stringify({
         votes: votes + 1
@@ -64,7 +64,6 @@ class ConferenceRoom extends Component {
 
   render() {
     const { questions, actions, room, status } = this.props
-
     return (
       <div>
         <HomeButton />
@@ -92,7 +91,7 @@ ConferenceRoom.defaultProps = {
 }
 
 function mapStateToProps(state, ownProps) {
-  const room = ownProps.location.pathname
+  const room = ownProps.location.pathname.replace('/', '')
   return {
     questions: state.questions,
     status: state.status.questions[room],
