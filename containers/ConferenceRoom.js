@@ -42,6 +42,7 @@ class ConferenceRoom extends Component {
       method: 'post',
       body: JSON.stringify({ text, room }),
       headers: {
+        'Authorization': `Bearer ${localStorage.getItem('id_token')}`,
         'Content-Type': 'application/json'
       }
     })

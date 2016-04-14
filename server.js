@@ -1,5 +1,6 @@
 'use strict'
 const express = require('express')
+const fetch = require('node-fetch')
 const app = express()
 const server = require('http').Server(app)
 const bodyParser = require('body-parser')
@@ -25,8 +26,26 @@ r.connect( {host: 'localhost', port: 28015}, function(err, conn) {
           })
 
           r.table('questions').insert([
-                  { text: 'What is your favourite programming language?', room: 'conference-room-1', votes: 1 },
-                  { text: 'Why do you like Java?', room: 'conference-room-1', votes: 2 }
+            {
+              'email': 'alex_somai@yahoo.com',
+              'name': 'alex_somai@yahoo.com',
+              'nickname': 'alex_somai',
+              'picture': 'https://s.gravatar.com/avatar/b6dffbc5adc820afa69a449879948e5d?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fal.png',
+              'room': 'conference-room-1',
+              'text': 'What is your favourite programming language?',
+              'user_id': 'auth0|570d391f3f062e8f16a7aa7a',
+              'votes': 0
+            },
+            {
+              'email': 'alex_somai@yahoo.com',
+              'name': 'alex_somai@yahoo.com',
+              'nickname': 'alex_somai',
+              'picture': 'https://s.gravatar.com/avatar/b6dffbc5adc820afa69a449879948e5d?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fal.png',
+              'room': 'conference-room-1',
+              'text': 'Why do you like Java?',
+              'user_id': 'auth0|570d391f3f062e8f16a7aa7a',
+              'votes': 2
+            }
           ]).run(connection, function(err, result) {
               if (err) throw err
               console.log(JSON.stringify(result, null, 2))
@@ -84,15 +103,34 @@ app.get('/questions/:room', (req, res, next) => {
 })
 
 app.post('/questions', (req, res, next) => {
+  const id_token = req.headers['authorization'].split(' ')[1]
   const room = req.body.room
   const text = req.body.text
 
-  r.table('questions').insert({ text: text, room: room, votes: 0 })
-  .run(connection, function(err, result) {
-      if (err) throw err
-      console.log(JSON.stringify(result, null, 2))
-      res.sendStatus(201)
-  })
+  fetch('https://alexsomai.eu.auth0.com/tokeninfo', {
+    method: 'post',
+    body: JSON.stringify({ id_token }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(function(response) {
+		return response.json()
+	}).then(function(json) {
+    const profile = json
+    r.table('questions').insert({
+      text: text, room: room, votes: 0,
+      user_id: profile.user_id,
+      picture: profile.picture,
+      name: profile.name,
+      email: profile.email,
+      nickname: profile.nickname
+    })
+    .run(connection, function(err, result) {
+        if (err) throw err
+        console.log(JSON.stringify(result, null, 2))
+        res.sendStatus(201)
+    })
+	})
 })
 
 app.put('/question/:room/:id', (req, res, next) => {

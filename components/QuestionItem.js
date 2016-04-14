@@ -32,9 +32,9 @@ export default class QuestionItem extends Component {
     return (
       <Card style={style}>
         <CardHeader style={style.header}
-          title="username"
+          title={question.nickname}
           subtitle={votes}
-          avatar="http://passport.mobilenations.com/avatars/000/005/883/100x100_5883519.jpg" />
+          avatar={question.picture} />
         <CardText style={style.text}>
           <IconButton
             iconClassName="material-icons"
