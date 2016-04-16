@@ -11,7 +11,6 @@ export default function questions(state = {}, action) {
   switch (action.type) {
 
     case ADD_QUESTION:
-    console.log(question);
       state[question.room].push({
         id: question.id,
         text: question.text,

@@ -1,10 +1,10 @@
 export const API_ROOT = 'http://localhost:3001'
 
 // Fetches an API response as json
-function callApi(endpoint) {
+function callApi(endpoint, config) {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint
 
-  return fetch(fullUrl)
+  return fetch(fullUrl, config)
     .then(response =>
       response.json().then(json => ({ json, response }))
     ).then(({ json, response }) => {
@@ -27,11 +27,14 @@ export default store => next => action => {
     return next(action)
   }
 
-  let { endpoint } = callAPI
+  let { endpoint, config } = callAPI
   const { types } = callAPI
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState())
+  }
+  if(typeof config === 'undefined') {
+    config = {}
   }
 
   if (typeof endpoint !== 'string') {
@@ -53,7 +56,7 @@ export default store => next => action => {
   const [ requestType, successType, failureType ] = types
   next(actionWith({ type: requestType }))
 
-  return callApi(endpoint).then(
+  return callApi(endpoint, config).then(
     response => next(actionWith({
       response,
       type: successType

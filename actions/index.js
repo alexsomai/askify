@@ -1,6 +1,26 @@
 import * as types from '../constants/ActionTypes'
 import { CALL_API } from '../middleware/api'
 
+function createSession(creds) {
+  return {
+    [CALL_API]: {
+      types: [ types.LOGIN_REQUEST, types.LOGIN_SUCCESS, types.LOGIN_FAILURE ],
+      endpoint: '/sessions/create',
+      config: {
+          method: 'POST',
+          headers: { 'Content-Type':'application/x-www-form-urlencoded' },
+          body: `username=${creds.username}&password=${creds.password}`
+      }
+    }
+  }
+}
+
+export function loginUser(creds) {
+  return (dispatch) => {
+    return dispatch(createSession(creds))
+  }
+}
+
 // Fetches all the questions from the given room
 // Relies on the custom API middleware defined in ../middleware/api.js.
 function fetchQuestions(room) {

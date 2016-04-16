@@ -7,10 +7,13 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const port = 3001
 
+// set up the RethinkDB database
+db.setup();
+
 const r = require('rethinkdb')
 let connection = null
 
-r.connect({host: 'localhost', port: 28015}, function(err, conn) {
+r.connect({ host: 'localhost', port: 28015 }, function(err, conn) {
     if (err) throw err
     connection = conn
 

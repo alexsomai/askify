@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 import questions from './questions'
 import checkStatus from './status'
+import auth from './auth'
 import { routerReducer as routing } from 'react-router-redux'
 import * as ActionTypes from '../constants/ActionTypes'
 
@@ -18,6 +19,7 @@ const status = combineReducers({
 const rootReducer = combineReducers({
   questions,
   status,
+  auth,
   routing
 })
 
