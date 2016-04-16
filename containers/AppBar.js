@@ -5,12 +5,10 @@ import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert'
 import MenuItem from 'material-ui/lib/menus/menu-item'
 import IconButton from 'material-ui/lib/icon-button'
 import FlatButton from 'material-ui/lib/flat-button'
-import { AUTH0_DOMAIN } from '../constants/Auth0Variables'
 
 export default class MyAppBar extends Component {
   signOut() {
     localStorage.removeItem('id_token')
-    window.location = `https://${AUTH0_DOMAIN}/v2/logout?returnTo=${encodeURIComponent('http://localhost:3000/#complete')}`
   }
 
   render() {

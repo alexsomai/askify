@@ -2,14 +2,6 @@ import React, { Component, PropTypes } from 'react'
 import TextField from 'material-ui/lib/text-field'
 import RaisedButton from 'material-ui/lib/raised-button'
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    textAlign: 'center'
-}
-
 export default class JoinRoom extends Component {
   constructor(props) {
     super(props)
@@ -32,7 +24,7 @@ export default class JoinRoom extends Component {
 
   render() {
     return (
-      <div style={style}>
+      <div className="center">
         <TextField
           id="join-room-text-field"
           value={this.state.text}
