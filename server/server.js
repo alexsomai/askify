@@ -165,6 +165,8 @@ io.on('connection', socket => {
   })
 })
 
+app.use(require('./user-routes'));
+
 server.listen(port)
 
 console.info(`==> 🌎  Server Listening on port ${port}. Open up http://localhost:${port}/ in your browser.`)
