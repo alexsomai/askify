@@ -1,7 +1,7 @@
 import Rx from 'rx'
 import io from 'socket.io-client'
 
-const socket = io()
+const socket = io('//localhost:3001')
 let subscribtion
 
 export function subscribe(props) {

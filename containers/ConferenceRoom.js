@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as QuestionActions from '../actions'
 import { subscribe, unsubscribe } from '../middleware/socket-util'
+import { API_ROOT } from '../middleware/api'
 
 import QuestionTextInput from '../components/QuestionTextInput'
 import MainSection from '../components/MainSection'
@@ -38,7 +39,7 @@ class ConferenceRoom extends Component {
     }
 
     const { room } = this.props
-    fetch('/questions', {
+    fetch(`${API_ROOT}/questions`, {
       method: 'post',
       body: JSON.stringify({ text, room }),
       headers: {
@@ -52,7 +53,7 @@ class ConferenceRoom extends Component {
     const { room } = this.props
     const { id, votes } = question
 
-    fetch(`/question/${room}/${id}`, {
+    fetch(`${API_ROOT}/question/${room}/${id}`, {
       method: 'put',
       body: JSON.stringify({
         votes: votes + 1

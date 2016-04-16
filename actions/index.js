@@ -8,7 +8,7 @@ function fetchQuestions(room) {
     room,
     [CALL_API]: {
       types: [ types.QUESTIONS_REQUEST, types.QUESTIONS_SUCCESS, types.QUESTIONS_FAILURE ],
-      endpoint: `questions/${room}`
+      endpoint: `/questions/${room}`
     }
   }
 }

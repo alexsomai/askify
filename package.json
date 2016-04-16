@@ -17,11 +17,9 @@
   },
   "homepage": "https://github.com/alexsomai/ask-me#readme",
   "dependencies": {
-    "body-parser": "^1.15.0",
     "express": "^4.13.4",
     "lodash": "^4.9.0",
-    "material-ui": "^0.15.0-alpha.2",
-    "node-fetch": "^1.5.1",
+    "material-ui": "^0.14.4",
     "react": "^0.14.8",
     "react-dom": "^0.14.8",
     "react-redux": "^4.4.1",
@@ -31,9 +29,7 @@
     "redux": "^3.3.1",
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.0.1",
-    "rethinkdb": "^2.3.0",
-    "rx": "^4.1.0",
-    "socket.io": "^1.4.5"
+    "rx": "^4.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.7.4",
