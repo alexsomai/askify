@@ -1,4 +1,4 @@
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from '../constants/ActionTypes'
+import { AUTH_REQUEST, AUTH_SUCCESS, AUTH_FAILURE } from '../constants/ActionTypes'
 
 // The auth reducer. The starting state sets authentication based on a token
 // being in local storage. In a real app, we would also want a util to check if
@@ -8,20 +8,19 @@ export default function auth(state = {
     isAuthenticated: localStorage.getItem('id_token') ? true : false
   }, action) {
   switch (action.type) {
-    case LOGIN_REQUEST:
+    case AUTH_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
-        isAuthenticated: false,
-        user: action.creds,
+        isAuthenticated: false
       })
-    case LOGIN_SUCCESS:
+    case AUTH_SUCCESS:
       localStorage.setItem('id_token', action.response.id_token)
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: true,
         errorMessage: '',
       })
-    case LOGIN_FAILURE:
+    case AUTH_FAILURE:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: false,

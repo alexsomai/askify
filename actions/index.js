@@ -1,11 +1,11 @@
 import * as types from '../constants/ActionTypes'
 import { CALL_API } from '../middleware/api'
 
-function createSession(creds) {
+function authUser(creds, endpoint) {
   return {
     [CALL_API]: {
-      types: [ types.LOGIN_REQUEST, types.LOGIN_SUCCESS, types.LOGIN_FAILURE ],
-      endpoint: '/sessions/create',
+      types: [ types.AUTH_REQUEST, types.AUTH_SUCCESS, types.AUTH_FAILURE ],
+      endpoint: endpoint,
       config: {
           method: 'POST',
           headers: { 'Content-Type':'application/x-www-form-urlencoded' },
@@ -15,9 +15,15 @@ function createSession(creds) {
   }
 }
 
+export function registerUser(creds) {
+  return (dispatch) => {
+    return dispatch(authUser(creds, '/users'))
+  }
+}
+
 export function loginUser(creds) {
   return (dispatch) => {
-    return dispatch(createSession(creds))
+    return dispatch(authUser(creds, '/sessions/create'))
   }
 }
 

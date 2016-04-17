@@ -31,11 +31,11 @@ class Auth extends Component {
       )
     }
 
-
     const login = this.state.login
-    const linkText = login ? "I don't have an account" : 'I already have an account'
+    const linkText = login ? 'I don\'t have an account' : 'I already have an account'
     const linkTo = login ? this.showSignUp.bind(this) : this.showLogin.bind(this)
     const buttonLabel = login ? 'Login' : 'Sign Up'
+    const onAuth = login ? actions.loginUser : actions.registerUser
 
     return (
       <div>
@@ -43,7 +43,7 @@ class Auth extends Component {
           linkText={linkText}
           linkTo={linkTo}
           buttonLabel={buttonLabel}
-          onSubmitClick={actions.loginUser}
+          onSubmitClick={onAuth}
           errorMessage={auth.errorMessage} />
       </div>
     )
