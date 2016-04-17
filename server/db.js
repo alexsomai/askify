@@ -27,32 +27,39 @@ module.exports.setup = function() {
         console.log("[INFO ] RethinkDB database '%s' created", dbConfig.db)
       }
 
-      for (var tbl in dbConfig.tables) {
-        (function (tableName) {
-          r.db(dbConfig.db).tableCreate(tableName).run(connection, function(err, result) {
-            if (err) {
-              console.log("[DEBUG] RethinkDB table '%s' already exists (%s:%s)\n%s", tableName, err.name, err.msg, err.message)
-            } else {
-              console.log("[INFO ] RethinkDB table '%s' created", tableName)
-            }
-          })
-        })(tbl)
-      }
+      dbConfig.tables.map (table => {
+        r.db(dbConfig.db).tableCreate(table).run(connection, function(err, result) {
+          if (err) {
+            console.log("[DEBUG] RethinkDB table '%s' already exists (%s:%s)\n%s", table, err.name, err.msg, err.message)
+          } else {
+            console.log("[INFO ] RethinkDB table '%s' created", table)
+          }
+        })
+      })
 
-      r.table('questions').indexCreate('room').run(connection, function(err, result){
+      r.db(dbConfig.db).table('questions').indexCreate('room').run(connection, function(err, result){
         if (err) {
           console.log("[DEBUG] RethinkDB index 'room' already exists for table 'questions' (%s:%s)\n%s", err.name, err.msg, err.message)
         } else {
           console.log("[INFO ] RethinkDB index 'room' created")
         }
       })
+
+      r.db(dbConfig.db).table('users').indexCreate('username').run(connection, function(err, result){
+        if (err) {
+          console.log("[DEBUG] RethinkDB index 'username' already exists for table 'users' (%s:%s)\n%s", err.name, err.msg, err.message)
+        } else {
+          console.log("[INFO ] RethinkDB index 'username' created")
+        }
+      })
     })
   })
 }
 
+// #### Functions on `questions` table
+
 module.exports.findQuestions = function (room, callback) {
   onConnect(function (err, connection) {
-    console.log("CONNECTED")
     r.db(dbConfig['db']).table('questions').filter(r.row('room').eq(room))
       .run(connection, function(err, cursor) {
         if (err) throw err
@@ -102,7 +109,7 @@ module.exports.listenForAddQuestion = function (callback) {
         cursor.each(function(err, row) {
             if (err) throw err
             console.log(JSON.stringify(row, null, 2))
-            callback(row)
+            callback(row.new_val)
         })
     })
   })
@@ -116,8 +123,54 @@ module.exports.listenForEditQuestion = function (callback) {
         cursor.each(function(err, row) {
             if (err) throw err
             console.log(JSON.stringify(row, null, 2))
-            callback(row)
+            callback(row.new_val)
         })
+    })
+  })
+}
+
+// #### Functions on `users` table
+
+module.exports.findUsers = function (callback) {
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('users')
+      .run(connection, function(err, cursor) {
+        if (err) throw err
+        cursor.toArray(function(err, result) {
+            if (err) throw err
+            console.log(JSON.stringify(result, null, 2))
+            callback(result)
+        })
+        connection.close()
+    })
+  })
+}
+
+module.exports.createUser = function (username, password, callback) {
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('users')
+      .insert({ username: username, password: password }, { returnChanges: true })
+      .run(connection, function(err, result) {
+        if (err) throw err
+        console.log(JSON.stringify(result, null, 2))
+        callback(result.changes[0].new_val)
+        connection.close()
+      })
+  })
+}
+
+module.exports.findUserByUsername = function (username, callback) {
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('users')
+      .filter(r.row('username').eq(username))
+      .run(connection, function(err, cursor) {
+        if (err) throw err
+        cursor.toArray(function(err, result) {
+            if (err) throw err
+            console.log(JSON.stringify(result, null, 2))
+            callback(result)
+        })
+        connection.close()
     })
   })
 }

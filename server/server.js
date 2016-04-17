@@ -7,6 +7,8 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const port = 3001
 
+const jwt = require('jsonwebtoken')
+
 const db = require('./db')
 
 // set up the RethinkDB database
@@ -16,43 +18,8 @@ app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use(cors())
 
-app.get('/questions/:room', (req, res, next) => {
-  const room = req.params.room
-  db.findQuestions(room, questions => {
-    res.json({ [room]: questions })
-  })
-})
-
-app.post('/questions', (req, res, next) => {
-  const id_token = req.headers['authorization'].split(' ')[1]
-  const room = req.body.room
-  const text = req.body.text
-
-  /* TODO - retrieve user details based on id_token */
-  const question = {
-    text: text, room: room, votes: 0,
-    user_id: '22',
-    picture: '',
-    name: 'profile.name',
-    email: 'profile.email',
-    nickname: 'profile.nickname',
-    voted_by: []
-  }
-  db.insertQuestion(question, () => {
-    res.sendStatus(201)
-  })
-})
-
-app.put('/question/:room/:id', (req, res, next) => {
-  const id_token = req.headers['authorization'].split(' ')[1]
-  const room = req.params.room
-  const id = req.params.id
-
-  /* TODO - retrieve user details based on id_token */
-  db.voteQuestion(id, req.body.votes, '22', () => {
-    res.sendStatus(200)
-  })
-})
+app.use(require('./user-routes'))
+app.use(require('./question-routes'))
 
 const io = require('socket.io')(server)
 io.on('connection', socket => {
@@ -63,10 +30,8 @@ io.on('connection', socket => {
   })
 })
 
-db.listenForAddQuestion(row => io.emit('question:create', row.new_val))
-db.listenForEditQuestion(row => io.emit('question:update', row.new_val))
-
-app.use(require('./user-routes'))
+db.listenForAddQuestion(item => io.emit('question:create', item))
+db.listenForEditQuestion(item => io.emit('question:update', item))
 
 server.listen(port)
 
