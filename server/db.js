@@ -1,4 +1,5 @@
 const r = require('rethinkdb')
+const _ = require('lodash')
 
 // #### Connection details
 
@@ -20,6 +21,9 @@ const dbConfig = {
 module.exports.setup = function() {
   r.connect({ host: dbConfig.host, port: dbConfig.port }, function (err, connection) {
     if (err) throw err
+
+    // r.dbDrop(dbConfig.db).run(connection, function(err, result) { })
+
     r.dbCreate(dbConfig.db).run(connection, function(err, result) {
       if (err) {
         console.log("[DEBUG] RethinkDB database '%s' already exists (%s:%s)\n%s", dbConfig.db, err.name, err.msg, err.message)
@@ -60,7 +64,9 @@ module.exports.setup = function() {
 
 module.exports.findQuestions = function (room, callback) {
   onConnect(function (err, connection) {
-    r.db(dbConfig['db']).table('questions').filter(r.row('room').eq(room))
+    r.db(dbConfig['db']).table('questions')
+      .filter(r.row('room').eq(room))
+      .eqJoin('user_id', r.table('users')).without({ right: 'id' }).zip()
       .run(connection, function(err, cursor) {
         if (err) throw err
         cursor.toArray(function(err, results) {
@@ -73,7 +79,13 @@ module.exports.findQuestions = function (room, callback) {
   })
 }
 
-module.exports.insertQuestion = function (question, callback) {
+module.exports.insertQuestion = function (room, text, user_id, callback) {
+  const question = {
+    text: text, room: room, votes: 0,
+    user_id: user_id,
+    voted_by: []
+  }
+
   onConnect(function (err, connection) {
     r.db(dbConfig['db']).table('questions')
       .insert(question)
@@ -109,7 +121,16 @@ module.exports.listenForAddQuestion = function (callback) {
         cursor.each(function(err, row) {
             if (err) throw err
             console.log(JSON.stringify(row, null, 2))
-            callback(row.new_val)
+
+            const question = row.new_val
+            /* hackish solution to get user details based on the user_id
+             for the question being added */
+            r.db(dbConfig['db']).table('users').get(question.user_id).without('id')
+              .run(connection, function(err, user){
+                if (err) throw err
+                console.log(JSON.stringify(user, null, 2))
+                callback(_.merge({}, row.new_val, user))
+            })
         })
     })
   })
@@ -117,7 +138,9 @@ module.exports.listenForAddQuestion = function (callback) {
 
 module.exports.listenForEditQuestion = function (callback) {
   onConnect(function (err, connection) {
-    r.db(dbConfig['db']).table('questions').changes()
+    r.db(dbConfig['db']).table('questions')
+      .changes()
+      .filter(r.row('old_val').ne(null))
       .run(connection, function(err, cursor) {
         if (err) throw err
         cursor.each(function(err, row) {
@@ -149,7 +172,11 @@ module.exports.findUsers = function (callback) {
 module.exports.createUser = function (username, password, callback) {
   onConnect(function (err, connection) {
     r.db(dbConfig['db']).table('users')
-      .insert({ username: username, password: password }, { returnChanges: true })
+      .insert({
+        username: username,
+        password: password,
+        picture: `https://robohash.org/${username}`
+      }, { returnChanges: true })
       .run(connection, function(err, result) {
         if (err) throw err
         console.log(JSON.stringify(result, null, 2))
@@ -168,7 +195,7 @@ module.exports.findUserByUsername = function (username, callback) {
         cursor.toArray(function(err, result) {
             if (err) throw err
             console.log(JSON.stringify(result, null, 2))
-            callback(result)
+            callback(result[0])
         })
         connection.close()
     })

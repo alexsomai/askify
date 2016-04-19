@@ -32,7 +32,7 @@ export default class QuestionItem extends Component {
     return (
       <Card style={style}>
         <CardHeader style={style.header}
-          title={question.nickname}
+          title={question.username}
           subtitle={votes}
           avatar={question.picture} />
         <CardText style={style.text}>

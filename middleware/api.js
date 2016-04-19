@@ -1,7 +1,18 @@
 export const API_ROOT = 'http://localhost:3001'
 
 // Fetches an API response as json
-function callApi(endpoint, config) {
+function callApi(endpoint, config, authenticated) {
+  const token = localStorage.getItem('id_token') || null
+  if (authenticated) {
+    if (token) {
+      config = Object.assign({}, config, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+    } else {
+      throw "No token saved!"
+    }
+  }
+
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint
 
   return fetch(fullUrl, config)
@@ -28,7 +39,7 @@ export default store => next => action => {
   }
 
   let { endpoint, config } = callAPI
-  const { types } = callAPI
+  const { types, authenticated } = callAPI
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState())
@@ -56,9 +67,10 @@ export default store => next => action => {
   const [ requestType, successType, failureType ] = types
   next(actionWith({ type: requestType }))
 
-  return callApi(endpoint, config).then(
+  return callApi(endpoint, config, authenticated).then(
     response => next(actionWith({
       response,
+      authenticated,
       type: successType
     })),
     error => next(actionWith({
