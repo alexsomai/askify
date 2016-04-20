@@ -8,6 +8,7 @@ import { API_ROOT } from '../middleware/api'
 import QuestionTextInput from '../components/QuestionTextInput'
 import MainSection from '../components/MainSection'
 import HomeButton from '../components/HomeButton'
+import BackToTop from '../components/BackToTop'
 
 function loadData(props) {
   const { actions, room } = props
@@ -78,6 +79,7 @@ class ConferenceRoom extends Component {
           loadingLabel={`Loading questions for '${room}' conference room...`}
           emptyRoomLabel={`Conference room '${room}' has no questions yet`} />
         <QuestionTextInput onSubmit={this.submitQuestion} />
+        <BackToTop />
       </div>
     )
   }

@@ -1,17 +1,12 @@
-import { ADD_QUESTION, VOTE_QUESTION } from '../constants/ActionTypes'
+import { ADD_QUESTION, VOTE_QUESTION, QUESTIONS_SUCCESS } from '../constants/ActionTypes'
 import merge from 'lodash/merge'
 
-export default function questions(state = {}, action) {
-  if (action.response) {
-    // this is the initial request, when are fetched all the questions from the API
-    return merge({}, state, action.response)
-  }
-
+function updateQuestion(state = {}, action) {
   const question = action.payload
-  switch (action.type) {
 
+  switch (action.type) {
     case ADD_QUESTION:
-      state[question.room].push({
+      state.push({
         id: question.id,
         text: question.text,
         votes: question.votes,
@@ -19,17 +14,29 @@ export default function questions(state = {}, action) {
         username: question.username,
         picture: question.picture
       })
-      return Object.assign({}, state)
-
+      return state
     case VOTE_QUESTION:
-      state[question.room] = state[question.room].map(item =>
+      return state.map(item =>
         item.id === question.id
-        ? Object.assign({}, item, {
-          votes: question.votes,
-          voted_by: question.voted_by
-        })
-        : item)
-      return Object.assign({}, state)
+          ? Object.assign({}, item, { votes: question.votes, voted_by: question.voted_by })
+          : item
+      )
+    default:
+      return state
+  }
+}
+
+export default function questions(state = {}, action) {
+  switch (action.type) {
+    case QUESTIONS_SUCCESS:
+      return merge({}, state, action.response)
+
+    case ADD_QUESTION:
+    case VOTE_QUESTION:
+      const room = action.payload.room
+      return merge({}, state, {
+        [room]: updateQuestion(state[room], action)
+      })
 
     default:
       return state

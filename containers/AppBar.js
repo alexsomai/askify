@@ -9,6 +9,7 @@ import FlatButton from 'material-ui/lib/flat-button'
 export default class MyAppBar extends Component {
   signOut() {
     localStorage.removeItem('id_token')
+    window.location.href = '/'
   }
 
   render() {
@@ -17,7 +18,6 @@ export default class MyAppBar extends Component {
         title="Title"
         iconElementRight={
           <div>
-            <FlatButton label="Sign In" />
             <IconMenu
               iconButtonElement={
                 <IconButton><MoreVertIcon /></IconButton>
@@ -25,7 +25,6 @@ export default class MyAppBar extends Component {
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}
             >
-              <MenuItem primaryText="Refresh" />
               <MenuItem primaryText="Help" />
               <MenuItem primaryText="Sign out" onClick={this.signOut} />
             </IconMenu>
