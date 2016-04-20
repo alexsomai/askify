@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import createLogger from 'redux-logger'
+import sequenceAction from 'redux-sequence-action';
 import api from '../middleware/api'
 import rootReducer from '../reducers'
 import DevTools from '../containers/DevTools'
@@ -10,7 +11,7 @@ export default function configureStore(initialState) {
     rootReducer,
     initialState,
     compose(
-      applyMiddleware(thunk, api),
+      applyMiddleware(thunk, api, sequenceAction),
       DevTools.instrument()
     ))
 

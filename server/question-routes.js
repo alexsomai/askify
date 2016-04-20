@@ -33,9 +33,13 @@ app.put('/question/:room/:id', (req, res) => {
   const id_token = req.headers['authorization'].split(' ')[1]
   const user = jwt_decode(id_token)
   const room = req.params.room
-  const id = req.params.id
+  const question_id = req.params.id
 
-  db.voteQuestion(id, req.body.votes, user.id, () => {
-    res.sendStatus(200)
+  db.voteQuestion(question_id, req.body.votes, user.id, (result) => {
+    if (result.errors) {
+      res.status(400).send({ message: result.first_error })
+    } else {
+      res.sendStatus(200)
+    }
   })
 })

@@ -101,9 +101,15 @@ module.exports.insertQuestion = function (room, text, user_id, callback) {
 module.exports.voteQuestion = function (question_id, votes, user_id, callback) {
   onConnect(function (err, connection) {
     r.db(dbConfig['db']).table('questions').get(question_id)
-      .update({
-        votes: votes,
-        voted_by: r.row('voted_by').append(user_id)
+      .update(function(question) {
+        return r.branch(
+            question('voted_by').contains(user_id),
+            r.error('You are not allowed to vote twice!'),
+            {
+              votes: votes,
+              voted_by: question('voted_by').append(user_id)
+            }
+        )
       }).run(connection, function(err, result) {
         if (err) throw err
         console.log(JSON.stringify(result, null, 2))
@@ -197,6 +203,18 @@ module.exports.findUserByUsername = function (username, callback) {
             console.log(JSON.stringify(result, null, 2))
             callback(result[0])
         })
+        connection.close()
+    })
+  })
+}
+
+module.exports.findUserById = function (id, callback) {
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('users').get(id).without('password')
+      .run(connection, function(err, result) {
+        if (err) throw err
+        console.log(JSON.stringify(result, null, 2))
+        callback(result)
         connection.close()
     })
   })

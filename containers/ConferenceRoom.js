@@ -66,12 +66,13 @@ class ConferenceRoom extends Component {
   }
 
   render() {
-    const { questions, actions, room, status } = this.props
+    const { questions, actions, userinfo, room, status } = this.props
     return (
       <div>
         <HomeButton />
         <MainSection
           questions={questions[room]}
+          userinfo={userinfo}
           isFetching={status.isFetching}
           onVoteQuestion={this.voteQuestion}
           loadingLabel={`Loading questions for '${room}' conference room...`}
@@ -98,7 +99,8 @@ function mapStateToProps(state, ownProps) {
   return {
     questions: state.questions,
     status: state.status.questions[room],
-    room: room
+    room: room,
+    userinfo: state.userinfo.data
   }
 }
 

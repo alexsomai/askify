@@ -15,7 +15,8 @@ export default function questions(state = {}, action) {
         id: question.id,
         text: question.text,
         votes: question.votes,
-        nickname: question.nickname,
+        voted_by: question.voted_by,
+        username: question.username,
         picture: question.picture
       })
       return Object.assign({}, state)
@@ -23,7 +24,10 @@ export default function questions(state = {}, action) {
     case VOTE_QUESTION:
       state[question.room] = state[question.room].map(item =>
         item.id === question.id
-        ? Object.assign({}, item, { votes: question.votes })
+        ? Object.assign({}, item, {
+          votes: question.votes,
+          voted_by: question.voted_by
+        })
         : item)
       return Object.assign({}, state)
 

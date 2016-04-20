@@ -2,12 +2,14 @@ const express = require('express')
 const _ = require('lodash')
 const config = require('./config')
 const jwt = require('jsonwebtoken')
+const jwt_decode = require('jwt-decode')
 
 const app = module.exports = express.Router()
 const db = require('./db')
 
 function createToken(user) {
-  return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60*60*5 })
+  // This is not the best approach, since jwt isn't set to expire
+  return jwt.sign(_.omit(user, 'password'), config.secret)
 }
 
 app.get('/users', (req, res) =>  {
@@ -29,8 +31,6 @@ app.post('/users', (req, res) =>  {
     }
 
     db.createUser(username, password, user => {
-      console.log("USER");
-      console.log(user);
       res.status(201).send({ id_token: createToken(user) })
     })
   })
@@ -52,5 +52,13 @@ app.post('/sessions/create', (req, res) =>  {
         return res.status(401).send({ message: 'The username or password don\'t match' })
     }
     res.status(201).send({ id_token: createToken(user) })
+  })
+})
+
+app.get('/userinfo', (req, res) => {
+  const id_token = req.headers['authorization'].split(' ')[1]
+  const userInfo = jwt_decode(id_token)
+  db.findUserById(userInfo.id, user => {
+    res.json(user)
   })
 })

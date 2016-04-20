@@ -27,7 +27,7 @@ export default class QuestionItem extends Component {
   }
 
   render() {
-    const { question } = this.props
+    const { question, thumbUpDisabled } = this.props
     const votes = `${question.votes} votes`
     return (
       <Card style={style}>
@@ -38,7 +38,8 @@ export default class QuestionItem extends Component {
         <CardText style={style.text}>
           <IconButton
             iconClassName="material-icons"
-            onClick={this.handleVote}>
+            onClick={this.handleVote}
+            disabled={thumbUpDisabled}>
             thumb_up
           </IconButton>
           {question.text}
@@ -50,5 +51,6 @@ export default class QuestionItem extends Component {
 
 QuestionItem.propTypes = {
   question: PropTypes.object.isRequired,
-  onThumbUp: PropTypes.func.isRequired
+  onThumbUp: PropTypes.func.isRequired,
+  thumbUpDisabled: PropTypes.bool.isRequired
 }

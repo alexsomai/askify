@@ -11,7 +11,7 @@ export default class MainSection extends Component {
   render() {
     const {
       questions, isFetching, loadingLabel,
-      emptyRoomLabel, onVoteQuestion
+      emptyRoomLabel, onVoteQuestion, userinfo
     } = this.props
 
     if (isFetching) {
@@ -34,11 +34,14 @@ export default class MainSection extends Component {
       <div style={style}>
         {questions
           .sort((a, b) => b.votes - a.votes)
-          .map(question =>
-            <QuestionItem
-              key={question.id}
-              question={question}
-              onThumbUp={onVoteQuestion} />
+          .map(question => {
+            const thumbUpDisabled = question.voted_by.includes(userinfo.id)
+            return <QuestionItem
+                    key={question.id}
+                    question={question}
+                    onThumbUp={onVoteQuestion}
+                    thumbUpDisabled={thumbUpDisabled} />
+          }
         )}
       </div>
     )
@@ -47,6 +50,7 @@ export default class MainSection extends Component {
 
 MainSection.propTypes = {
   questions: PropTypes.array,
+  userinfo: PropTypes.object,
   isFetching: PropTypes.bool.isRequired,
   loadingLabel: PropTypes.string.isRequired,
   emptyRoomLabel: PropTypes.string.isRequired,

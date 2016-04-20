@@ -1,18 +1,50 @@
 import * as types from '../constants/ActionTypes'
 import { CALL_API } from '../middleware/api'
 
-function authUser(creds, endpoint) {
+function fetchUserInfo() {
   return {
     [CALL_API]: {
-      types: [ types.AUTH_REQUEST, types.AUTH_SUCCESS, types.AUTH_FAILURE ],
-      endpoint: endpoint,
-      config: {
-          method: 'POST',
-          headers: { 'Content-Type':'application/x-www-form-urlencoded' },
-          body: `username=${creds.username}&password=${creds.password}`
-      }
+      types: [ types.USERINFO_REQUEST, types.USERINFO_SUCCESS, types.USERINFO_FAILURE ],
+      endpoint: '/userinfo',
+      authenticated: true
     }
   }
+}
+
+export function loadUserInfo() {
+  return (dispatch, getState) => {
+    const userinfo = getState().userinfo.data
+    if (userinfo) {
+      return null
+    }
+    const isAuthenticated = getState().auth.isAuthenticated
+    if (!isAuthenticated) {
+      return null
+    }
+
+    return dispatch(fetchUserInfo())
+  }
+}
+
+function authUser(creds, endpoint) {
+  return [
+    {
+      [CALL_API]: {
+        types: [ types.AUTH_REQUEST, types.AUTH_SUCCESS, types.AUTH_FAILURE ],
+        endpoint: endpoint,
+        config: {
+            method: 'POST',
+            headers: { 'Content-Type':'application/x-www-form-urlencoded' },
+            body: `username=${creds.username}&password=${creds.password}`
+        }
+      }
+    },
+    // fetch user info after he logs in
+    // sequential dispatching is achieved with 'redux-sequence-action'
+    (dispatch, getState) => {
+      dispatch(fetchUserInfo())
+    }
+  ]
 }
 
 export function registerUser(creds) {
@@ -34,8 +66,8 @@ function fetchQuestions(room) {
     room,
     [CALL_API]: {
       types: [ types.QUESTIONS_REQUEST, types.QUESTIONS_SUCCESS, types.QUESTIONS_FAILURE ],
-      authenticated: true,
-      endpoint: `/questions/${room}`
+      endpoint: `/questions/${room}`,
+      authenticated: true
     }
   }
 }
