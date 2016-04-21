@@ -11,7 +11,6 @@ export default class Root extends Component {
     return (
       <Provider store={store}>
         <div>
-          <AppBar />
           <Router history={history} routes={routes} />
           <DevTools />
         </div>
