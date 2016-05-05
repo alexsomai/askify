@@ -10,9 +10,17 @@ const style = {
 export default class MainSection extends Component {
   render() {
     const {
-      questions, isFetching, loadingLabel,
+      questions, isFetching, errorMessage, loadingLabel,
       emptyRoomLabel, onVoteQuestion, userinfo
     } = this.props
+
+    if (errorMessage) {
+      return (
+        <div style={style}>
+          <h1 style={{ color: 'red' }}>{errorMessage}</h1>
+        </div>
+      )
+    }
 
     if (isFetching) {
       return (
@@ -51,10 +59,11 @@ export default class MainSection extends Component {
 MainSection.propTypes = {
   questions: PropTypes.array,
   userinfo: PropTypes.object,
-  isFetching: PropTypes.bool.isRequired,
+  isFetching: PropTypes.bool,
   loadingLabel: PropTypes.string.isRequired,
   emptyRoomLabel: PropTypes.string.isRequired,
-  onVoteQuestion: PropTypes.func.isRequired
+  onVoteQuestion: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string
 }
 
 MainSection.defaultProps = {

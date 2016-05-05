@@ -39,10 +39,10 @@ function authUser(creds, endpoint) {
         }
       }
     },
-    // fetch user info after he logs in
+    // load user info after he logs in
     // sequential dispatching is achieved with 'redux-sequence-action'
     (dispatch, getState) => {
-      dispatch(fetchUserInfo())
+      dispatch(loadUserInfo())
     }
   ]
 }

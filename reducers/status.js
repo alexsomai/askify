@@ -24,11 +24,13 @@ export default function checkStatus({ types, mapActionToKey }) {
         })
       case successType:
         return merge({}, state, {
-          isFetching: false
+          isFetching: false,
+          errorMessage: ''
         })
       case failureType:
         return merge({}, state, {
-          isFetching: false
+          isFetching: false,
+          errorMessage: action.error
         })
       default:
         return state

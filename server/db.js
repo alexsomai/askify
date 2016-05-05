@@ -7,8 +7,7 @@ const _ = require('lodash')
 const dbConfig = {
   host: process.env.RDB_HOST || 'localhost',
   port: parseInt(process.env.RDB_PORT) || 28015,
-  db  : process.env.RDB_DB || 'test',
-  tables: ['questions', 'users']
+  db  : process.env.RDB_DB || 'test'
 }
 
 /**
@@ -18,7 +17,7 @@ const dbConfig = {
  * - create tables `questions` and `users` in this database
  * - create secondary index on `room` row from `questions` table
  */
-module.exports.setup = function() {
+module.exports.setup = function(callback) {
   r.connect({ host: dbConfig.host, port: dbConfig.port }, function (err, connection) {
     if (err) throw err
 
@@ -27,35 +26,45 @@ module.exports.setup = function() {
     r.dbCreate(dbConfig.db).run(connection, function(err, result) {
       if (err) {
         console.log("[DEBUG] RethinkDB database '%s' already exists (%s:%s)\n%s", dbConfig.db, err.name, err.msg, err.message)
+        callback()
       } else {
         console.log("[INFO ] RethinkDB database '%s' created", dbConfig.db)
-      }
 
-      dbConfig.tables.map (table => {
-        r.db(dbConfig.db).tableCreate(table).run(connection, function(err, result) {
+        const questions = 'questions'
+        r.db(dbConfig.db).tableCreate(questions).run(connection, function(err, result) {
           if (err) {
             console.log("[DEBUG] RethinkDB table '%s' already exists (%s:%s)\n%s", table, err.name, err.msg, err.message)
           } else {
-            console.log("[INFO ] RethinkDB table '%s' created", table)
+            console.log("[INFO ] RethinkDB table '%s' created", questions)
+
+            r.db(dbConfig.db).table(questions).indexCreate('room').run(connection, function(err, result){
+              if (err) {
+                console.log("[DEBUG] RethinkDB index 'room' already exists for table 'questions' (%s:%s)\n%s", err.name, err.msg, err.message)
+              } else {
+                console.log("[INFO ] RethinkDB index 'room' created")
+              }
+            })
           }
         })
-      })
 
-      r.db(dbConfig.db).table('questions').indexCreate('room').run(connection, function(err, result){
-        if (err) {
-          console.log("[DEBUG] RethinkDB index 'room' already exists for table 'questions' (%s:%s)\n%s", err.name, err.msg, err.message)
-        } else {
-          console.log("[INFO ] RethinkDB index 'room' created")
-        }
-      })
+        const users = 'users'
+        r.db(dbConfig.db).tableCreate(users).run(connection, function(err, result) {
+          if (err) {
+            console.log("[DEBUG] RethinkDB table '%s' already exists (%s:%s)\n%s", table, err.name, err.msg, err.message)
+          } else {
+            console.log("[INFO ] RethinkDB table '%s' created", users)
 
-      r.db(dbConfig.db).table('users').indexCreate('username').run(connection, function(err, result){
-        if (err) {
-          console.log("[DEBUG] RethinkDB index 'username' already exists for table 'users' (%s:%s)\n%s", err.name, err.msg, err.message)
-        } else {
-          console.log("[INFO ] RethinkDB index 'username' created")
-        }
-      })
+            r.db(dbConfig.db).table(users).indexCreate('username').run(connection, function(err, result) {
+              if (err) {
+                console.log("[DEBUG] RethinkDB index 'username' already exists for table 'users' (%s:%s)\n%s", err.name, err.msg, err.message)
+              } else {
+                console.log("[INFO ] RethinkDB index 'username' created")
+                callback()
+              }
+            })
+          }
+        })
+      }
     })
   })
 }

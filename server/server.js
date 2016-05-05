@@ -12,7 +12,10 @@ const jwt = require('jsonwebtoken')
 const db = require('./db')
 
 // set up the RethinkDB database
-db.setup()
+db.setup(() => {
+  db.listenForAddQuestion(item => io.emit('question:create', item))
+  db.listenForEditQuestion(item => io.emit('question:update', item))
+})
 
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
@@ -29,9 +32,6 @@ io.on('connection', socket => {
     console.log(`User diconnected. Socket id ${socket.id}`)
   })
 })
-
-db.listenForAddQuestion(item => io.emit('question:create', item))
-db.listenForEditQuestion(item => io.emit('question:update', item))
 
 server.listen(port)
 

@@ -73,6 +73,7 @@ class ConferenceRoom extends Component {
           questions={questions[room]}
           userinfo={userinfo}
           isFetching={status.isFetching}
+          errorMessage={status.errorMessage}
           onVoteQuestion={this.voteQuestion}
           loadingLabel={`Loading questions for '${room}' conference room...`}
           emptyRoomLabel={`Conference room '${room}' has no questions yet`} />
