@@ -1,9 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
-import Card from 'material-ui/lib/card/card'
-import CardHeader from 'material-ui/lib/card/card-header'
-import CardText from 'material-ui/lib/card/card-text'
-import IconButton from 'material-ui/lib/icon-button'
+import { Card, CardHeader, CardText } from 'material-ui/Card'
+import IconButton from 'material-ui/IconButton'
 
 const style = {
   margin: '12px auto',

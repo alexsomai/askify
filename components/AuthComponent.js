@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
-import TextField from 'material-ui/lib/text-field'
-import RaisedButton from 'material-ui/lib/raised-button'
+import TextField from 'material-ui/TextField'
+import RaisedButton from 'material-ui/RaisedButton'
 
 export default class AuthComponent extends Component {
   constructor(props) {

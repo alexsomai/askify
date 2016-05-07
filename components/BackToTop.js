@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ScrollToTop from 'react-scroll-up'
-import FontIcon from 'material-ui/lib/font-icon'
+import FontIcon from 'material-ui/FontIcon'
 
 export default class BackToTop extends Component {
   render() {

@@ -1,15 +1,18 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
 
-import AppBar from 'material-ui/lib/app-bar'
-import IconMenu from 'material-ui/lib/menus/icon-menu'
-import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert'
-import MenuItem from 'material-ui/lib/menus/menu-item'
-import IconButton from 'material-ui/lib/icon-button'
-import FlatButton from 'material-ui/lib/flat-button'
-import LeftNav from 'material-ui/lib/left-nav'
-import NavigationClose from 'material-ui/lib/svg-icons/navigation/close'
-import FontIcon from 'material-ui/lib/font-icon'
+import AppBar from 'material-ui/AppBar'
+import IconMenu from 'material-ui/IconMenu'
+import MenuItem from 'material-ui/MenuItem'
+import IconButton from 'material-ui/IconButton'
+import FlatButton from 'material-ui/FlatButton'
+import Drawer from 'material-ui/Drawer'
+import FontIcon from 'material-ui/FontIcon'
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
+
+import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+
 
 export default class MyAppBar extends Component {
   constructor(props) {
@@ -17,6 +20,10 @@ export default class MyAppBar extends Component {
     this.handleToggle = this.handleToggle.bind(this)
     this.handleClose = this.handleClose.bind(this)
     this.state = { open: false }
+  }
+
+  getChildContext() {
+    return { muiTheme: getMuiTheme(baseTheme) }
   }
 
   signOut() {
@@ -51,7 +58,7 @@ export default class MyAppBar extends Component {
             </IconMenu>
           }
         />
-        <LeftNav
+        <Drawer
           docked={false}
           width={200}
           open={this.state.open}
@@ -68,9 +75,13 @@ export default class MyAppBar extends Component {
             <FontIcon className="material-icons">close</FontIcon>
             Close
           </MenuItem>
-        </LeftNav>
+        </Drawer>
         {this.props.children}
       </div>
     )
   }
+}
+
+MyAppBar.childContextTypes = {
+  muiTheme: PropTypes.object.isRequired
 }
