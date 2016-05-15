@@ -2,7 +2,7 @@ const express = require('express')
 const _ = require('lodash')
 const config = require('./config')
 const jwt = require('jsonwebtoken')
-const jwt_decode = require('jwt-decode')
+const jwtDecode = require('jwt-decode')
 
 const app = module.exports = express.Router()
 const db = require('./db')
@@ -57,7 +57,7 @@ app.post('/sessions/create', (req, res) =>  {
 
 app.get('/userinfo', (req, res) => {
   const id_token = req.headers['authorization'].split(' ')[1]
-  const userInfo = jwt_decode(id_token)
+  const userInfo = jwtDecode(id_token)
   db.findUserById(userInfo.id, user => {
     res.json(user)
   })

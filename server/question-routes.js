@@ -1,13 +1,13 @@
 const express = require('express')
-const express_jwt = require('express-jwt')
+const expressJwt = require('express-jwt')
 const config = require('./config')
 const jwt = require('jsonwebtoken')
-const jwt_decode = require('jwt-decode')
+const jwtDecode = require('jwt-decode')
 
 const app = module.exports = express.Router()
 const db = require('./db')
 
-const jwtCheck = express_jwt({ secret: config.secret })
+const jwtCheck = expressJwt({ secret: config.secret })
 
 app.use('/questions', jwtCheck)
 
@@ -20,7 +20,7 @@ app.get('/questions/:room', (req, res) => {
 
 app.post('/questions', (req, res) => {
   const id_token = req.headers['authorization'].split(' ')[1]
-  const user = jwt_decode(id_token)
+  const user = jwtDecode(id_token)
   const room = req.body.room
   const text = req.body.text
 
@@ -31,7 +31,7 @@ app.post('/questions', (req, res) => {
 
 app.put('/question/:id', (req, res) => {
   const id_token = req.headers['authorization'].split(' ')[1]
-  const user = jwt_decode(id_token)
+  const user = jwtDecode(id_token)
   const questionId = req.params.id
 
   db.updateQuestion(questionId, user.id, req.body, result => {
