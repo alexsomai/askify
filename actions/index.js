@@ -92,3 +92,7 @@ export function addQuestion(question) {
 export function voteQuestion(question) {
   return { type: types.VOTE_QUESTION, payload: question }
 }
+
+export function doneQuestion(question) {
+  return { type: types.DONE_QUESTION, payload: question }
+}

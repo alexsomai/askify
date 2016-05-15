@@ -29,13 +29,12 @@ app.post('/questions', (req, res) => {
   })
 })
 
-app.put('/question/:room/:id', (req, res) => {
+app.put('/question/:id', (req, res) => {
   const id_token = req.headers['authorization'].split(' ')[1]
   const user = jwt_decode(id_token)
-  const room = req.params.room
-  const question_id = req.params.id
+  const questionId = req.params.id
 
-  db.voteQuestion(question_id, req.body.votes, user.id, (result) => {
+  db.updateQuestion(questionId, user.id, req.body, result => {
     if (result.errors) {
       res.status(400).send({ message: result.first_error })
     } else {

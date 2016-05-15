@@ -14,7 +14,14 @@ const db = require('./db')
 // set up the RethinkDB database
 db.setup(() => {
   db.listenForAddQuestion(item => io.emit('question:create', item))
-  db.listenForEditQuestion(item => io.emit('question:update', item))
+  db.listenForUpdateQuestion((oldItem, newItem) => {
+    if (oldItem.done != newItem.done) {
+      io.emit('question:done', newItem)
+    }
+    if (oldItem.votes != newItem.votes) {
+      io.emit('question:vote', newItem)
+    }
+  })
 })
 
 app.use(bodyParser.json()) // for parsing application/json

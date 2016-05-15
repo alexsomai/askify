@@ -10,13 +10,17 @@ export function subscribe(props) {
   const createStream$ = Rx.Observable
     .fromEvent(socket, 'question:create')
     .filter(item => item.room === room)
-  const updateStream$ = Rx.Observable
-    .fromEvent(socket, 'question:update')
+  const voteStream$ = Rx.Observable
+    .fromEvent(socket, 'question:vote')
+    .filter(item => item.room === room)
+  const doneStream$ = Rx.Observable
+    .fromEvent(socket, 'question:done')
     .filter(item => item.room === room)
 
   const action$ = Rx.Observable.merge(
     createStream$.map(actions.addQuestion),
-    updateStream$.map(actions.voteQuestion)
+    voteStream$.map(actions.voteQuestion),
+    doneStream$.map(actions.doneQuestion)
   )
 
   subscribtion = action$.subscribe(questions.dispatch)

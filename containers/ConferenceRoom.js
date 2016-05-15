@@ -19,6 +19,7 @@ class ConferenceRoom extends Component {
     super(props)
     this.submitQuestion = this.submitQuestion.bind(this)
     this.voteQuestion = this.voteQuestion.bind(this)
+    this.doneQuestion = this.doneQuestion.bind(this)
   }
 
   componentWillMount() {
@@ -50,13 +51,25 @@ class ConferenceRoom extends Component {
   }
 
   voteQuestion(question) {
-    const { room } = this.props
     const { id, votes } = question
 
-    fetch(`${API_ROOT}/question/${room}/${id}`, {
+    fetch(`${API_ROOT}/question/${id}`, {
       method: 'put',
       body: JSON.stringify({
         votes: votes + 1
+      }),
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('id_token')}`,
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
+  doneQuestion(question) {
+    fetch(`${API_ROOT}/question/${question.id}`, {
+      method: 'put',
+      body: JSON.stringify({
+        done: !question.done
       }),
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('id_token')}`,
@@ -75,6 +88,7 @@ class ConferenceRoom extends Component {
           isFetching={status.isFetching}
           errorMessage={status.errorMessage}
           onVoteQuestion={this.voteQuestion}
+          onDoneQuestion={this.doneQuestion}
           loadingLabel={`Loading questions for '${room}' conference room...`}
           emptyRoomLabel={`Conference room '${room}' has no questions yet`} />
         <QuestionTextInput onSubmit={this.submitQuestion} />

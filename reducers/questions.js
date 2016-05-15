@@ -1,4 +1,4 @@
-import { ADD_QUESTION, VOTE_QUESTION, QUESTIONS_SUCCESS } from '../constants/ActionTypes'
+import { ADD_QUESTION, VOTE_QUESTION, DONE_QUESTION, QUESTIONS_SUCCESS } from '../constants/ActionTypes'
 
 function updateQuestion(state = [], action) {
   const question = action.payload
@@ -12,6 +12,8 @@ function updateQuestion(state = [], action) {
           text: question.text,
           votes: question.votes,
           voted_by: question.voted_by,
+          done: question.done,
+          user_id: question.user_id,
           username: question.username,
           picture: question.picture
         }
@@ -20,6 +22,12 @@ function updateQuestion(state = [], action) {
       return state.map(item =>
         item.id === question.id
           ? Object.assign({}, item, { votes: question.votes, voted_by: question.voted_by })
+          : item
+      )
+    case DONE_QUESTION:
+      return state.map(item =>
+        item.id === question.id
+          ? Object.assign({}, item, { done: question.done })
           : item
       )
     default:
@@ -34,6 +42,7 @@ export default function questions(state = {}, action) {
 
     case ADD_QUESTION:
     case VOTE_QUESTION:
+    case DONE_QUESTION:
       const room = action.payload.room
       return Object.assign({}, state, {
         [room]: updateQuestion(state[room], action)

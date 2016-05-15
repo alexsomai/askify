@@ -91,8 +91,7 @@ module.exports.findQuestions = function (room, callback) {
 module.exports.insertQuestion = function (room, text, user_id, callback) {
   const question = {
     text: text, room: room, votes: 0,
-    user_id: user_id,
-    voted_by: []
+    user_id: user_id, voted_by: [], done: false
   }
 
   onConnect(function (err, connection) {
@@ -107,16 +106,52 @@ module.exports.insertQuestion = function (room, text, user_id, callback) {
   })
 }
 
-module.exports.voteQuestion = function (question_id, votes, user_id, callback) {
+module.exports.updateQuestion = function (questionId, userId, params, callback) {
+  const votes = params.votes
+  if (typeof votes !== 'undefined') {
+    return voteQuestion(questionId, userId, votes, callback)
+  }
+
+  const done = params.done
+  if (typeof done !== 'undefined') {
+    return doneQuestion(questionId, userId, done, callback)
+  }
+}
+
+function voteQuestion (questionId, userId, votes, callback) {
   onConnect(function (err, connection) {
-    r.db(dbConfig['db']).table('questions').get(question_id)
+    r.db(dbConfig['db']).table('questions').get(questionId)
       .update(function(question) {
         return r.branch(
-            question('voted_by').contains(user_id),
+            question('voted_by').contains(userId),
             r.error('You are not allowed to vote twice!'),
+            r.branch(
+              question('done').eq(true),
+              r.error('You are not allowed to vote questions marked as done!'),
+              {
+                votes: votes,
+                voted_by: question('voted_by').append(userId)
+              }
+            )
+        )
+      }).run(connection, function(err, result) {
+        if (err) throw err
+        console.log(JSON.stringify(result, null, 2))
+        callback(result)
+        connection.close()
+    })
+  })
+}
+
+function doneQuestion (questionId, userId, done, callback) {
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('questions').get(questionId)
+      .update(function(question) {
+        return r.branch(
+            question('user_id').ne(userId),
+            r.error('You are allowed to mark as done/undone only your own questions!'),
             {
-              votes: votes,
-              voted_by: question('voted_by').append(user_id)
+              done: done
             }
         )
       }).run(connection, function(err, result) {
@@ -151,7 +186,7 @@ module.exports.listenForAddQuestion = function (callback) {
   })
 }
 
-module.exports.listenForEditQuestion = function (callback) {
+module.exports.listenForUpdateQuestion = function (callback) {
   onConnect(function (err, connection) {
     r.db(dbConfig['db']).table('questions')
       .changes()
@@ -161,7 +196,7 @@ module.exports.listenForEditQuestion = function (callback) {
         cursor.each(function(err, row) {
             if (err) throw err
             console.log(JSON.stringify(row, null, 2))
-            callback(row.new_val)
+            callback(row.old_val, row.new_val)
         })
     })
   })

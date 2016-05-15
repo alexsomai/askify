@@ -11,7 +11,8 @@ export default class MainSection extends Component {
   render() {
     const {
       questions, isFetching, errorMessage, loadingLabel,
-      emptyRoomLabel, onVoteQuestion, userinfo
+      emptyRoomLabel, onVoteQuestion, onDoneQuestion,
+      userinfo
     } = this.props
 
     if (errorMessage) {
@@ -41,14 +42,24 @@ export default class MainSection extends Component {
     return (
       <div style={style}>
         {questions
-          .sort((a, b) => b.votes - a.votes)
+          .sort((a, b) => {
+            if (a.done !== b.done) {
+              return b.done ? -1 : 1
+            }
+            if (a.votes !== b.votes) {
+              return b.votes - a.votes
+            }
+          })
           .map(question => {
-            const thumbUpDisabled = question.voted_by.includes(userinfo.id)
+            const thumbUpDisabled = question.voted_by.includes(userinfo.id) || question.done
+            const doneDisabled = question.user_id !== userinfo.id
             return <QuestionItem
                     key={question.id}
                     question={question}
                     onThumbUp={onVoteQuestion}
-                    thumbUpDisabled={thumbUpDisabled} />
+                    onDone={onDoneQuestion}
+                    thumbUpDisabled={thumbUpDisabled}
+                    doneDisabled={doneDisabled} />
           }
         )}
       </div>
@@ -63,6 +74,7 @@ MainSection.propTypes = {
   loadingLabel: PropTypes.string.isRequired,
   emptyRoomLabel: PropTypes.string.isRequired,
   onVoteQuestion: PropTypes.func.isRequired,
+  onDoneQuestion: PropTypes.func.isRequired,
   errorMessage: PropTypes.string
 }
 
