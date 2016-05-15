@@ -88,10 +88,15 @@ module.exports.findQuestions = function (room, callback) {
   })
 }
 
-module.exports.insertQuestion = function (room, text, user_id, callback) {
+module.exports.insertQuestion = function (room, text, userId, callback) {
   const question = {
-    text: text, room: room, votes: 0,
-    user_id: user_id, voted_by: [], done: false
+    text: text,
+    room: room,
+    user_id: userId,
+    votes: 0,
+    voted_by: [],
+    done: false,
+    created_at: r.now()
   }
 
   onConnect(function (err, connection) {

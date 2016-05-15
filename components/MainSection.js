@@ -49,6 +49,7 @@ export default class MainSection extends Component {
             if (a.votes !== b.votes) {
               return b.votes - a.votes
             }
+            return new Date(a.created_at) - new Date(b.created_at)
           })
           .map(question => {
             const thumbUpDisabled = question.voted_by.includes(userinfo.id) || question.done

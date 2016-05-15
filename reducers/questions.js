@@ -5,19 +5,7 @@ function updateQuestion(state = [], action) {
 
   switch (action.type) {
     case ADD_QUESTION:
-      return [
-        ...state,
-        {
-          id: question.id,
-          text: question.text,
-          votes: question.votes,
-          voted_by: question.voted_by,
-          done: question.done,
-          user_id: question.user_id,
-          username: question.username,
-          picture: question.picture
-        }
-      ]
+      return [...state, question]
     case VOTE_QUESTION:
       return state.map(item =>
         item.id === question.id
