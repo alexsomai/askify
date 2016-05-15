@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as QuestionActions from '../actions'
-import { subscribe, unsubscribe } from '../middleware/socket-util'
+import { subscribe } from '../middleware/socket-util'
 import { API_ROOT } from '../middleware/api'
 
 import QuestionTextInput from '../components/QuestionTextInput'
@@ -28,10 +28,6 @@ class ConferenceRoom extends Component {
 
   componentDidMount() {
     subscribe(this.props)
-  }
-
-  componentWillUnmount() {
-    unsubscribe()
   }
 
   submitQuestion(text) {

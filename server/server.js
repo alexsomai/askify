@@ -15,11 +15,11 @@ const db = require('./db')
 db.setup(() => {
   db.listenForAddQuestion(item => io.emit('question:create', item))
   db.listenForUpdateQuestion((oldItem, newItem) => {
-    if (oldItem.done != newItem.done) {
-      io.emit('question:done', newItem)
-    }
-    if (oldItem.votes != newItem.votes) {
+    if (oldItem.votes !== newItem.votes) {
       io.emit('question:vote', newItem)
+    }
+    if (oldItem.done !== newItem.done) {
+      io.emit('question:done', newItem)
     }
   })
 })

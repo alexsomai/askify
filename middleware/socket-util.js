@@ -23,9 +23,7 @@ export function subscribe(props) {
     doneStream$.map(actions.doneQuestion)
   )
 
-  subscribtion = action$.subscribe(questions.dispatch)
-}
-
-export function unsubscribe() {
-  subscribtion.dispose()
+  if (typeof subscribtion === 'undefined') {
+    subscribtion = action$.subscribe(questions.dispatch)
+  }
 }
