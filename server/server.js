@@ -16,17 +16,20 @@ const socketioJwt = require('socketio-jwt')
 const db = require('./db')
 
 // set up the RethinkDB database
-db.setup(() => {
-  db.listenForAddQuestion(item =>
-    io.on('authenticated', () => {}).emit('question:create', item))
-  db.listenForUpdateQuestion((oldItem, newItem) => {
-    if (oldItem.votes !== newItem.votes) {
-      io.on('authenticated', () => {}).emit('question:vote', newItem)
-    }
-    if (oldItem.done !== newItem.done) {
-      io.on('authenticated', () => {}).emit('question:done', newItem)
-    }
-  })
+const dropDB = false
+db.setup(dropDB, success => {
+  if (success) {
+    db.listenForAddQuestion(item =>
+      io.on('authenticated', () => {}).emit('question:create', item))
+    db.listenForUpdateQuestion((oldItem, newItem) => {
+      if (oldItem.votes !== newItem.votes) {
+        io.on('authenticated', () => {}).emit('question:vote', newItem)
+      }
+      if (oldItem.done !== newItem.done) {
+        io.on('authenticated', () => {}).emit('question:done', newItem)
+      }
+    })
+  }
 })
 
 app.use(bodyParser.json()) // for parsing application/json
