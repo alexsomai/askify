@@ -11,7 +11,6 @@ const jwt = require('jsonwebtoken')
 
 const config = require('./config')
 const io = require('socket.io')(server)
-const socketioJwt = require('socketio-jwt')
 
 const db = require('./db')
 
@@ -19,14 +18,13 @@ const db = require('./db')
 const dropDB = false
 db.setup(dropDB, success => {
   if (success) {
-    db.listenForAddQuestion(item =>
-      io.on('authenticated', () => {}).emit('question:create', item))
+    db.listenForAddQuestion(item => io.emit('question:create', item))
     db.listenForUpdateQuestion((oldItem, newItem) => {
       if (oldItem.votes !== newItem.votes) {
-        io.on('authenticated', () => {}).emit('question:vote', newItem)
+        io.emit('question:vote', newItem)
       }
       if (oldItem.done !== newItem.done) {
-        io.on('authenticated', () => {}).emit('question:done', newItem)
+        io.emit('question:done', newItem)
       }
     })
   }
@@ -39,17 +37,13 @@ app.use(cors())
 app.use(require('./user-routes'))
 app.use(require('./question-routes'))
 
-io.on('connection', socketioJwt.authorize({
-		secret: config.secret,
-		timeout: 15000 // 15 seconds to send the authentication message
-	}))
-  .on('authenticated', socket => {
-    console.log(`User connected & authenticated: ${JSON.stringify(socket.decoded_token)}. Socket id: ${socket.id}`)
+io.on('connection', socket => {
+  console.log(`User connected. Socket id ${socket.id}`)
 
-    socket.on('disconnect', () => {
-      console.log(`User diconnected. Socket id ${socket.id}`)
-    })
-	})
+  socket.on('disconnect', () => {
+    console.log(`User diconnected. Socket id ${socket.id}`)
+  })
+})
 
 server.listen(port)
 

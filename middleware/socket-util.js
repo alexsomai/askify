@@ -3,8 +3,6 @@ import io from 'socket.io-client'
 
 let subscribtion
 const socket = io('//localhost:3001')
-socket.on('connect', () => {})
-  .emit('authenticate', { token: localStorage.getItem('id_token') }) // send the jwt
 
 export function subscribe(props) {
   const { questions, actions, room } = props
