@@ -1,7 +1,7 @@
 import Rx from 'rx'
 import io from 'socket.io-client'
 
-let subscribtion
+let subscription = {}
 const socket = io('//localhost:3001')
 
 export function subscribe(props) {
@@ -23,7 +23,7 @@ export function subscribe(props) {
     doneStream$.map(actions.doneQuestion)
   )
 
-  if (typeof subscribtion === 'undefined') {
-    subscribtion = action$.subscribe(questions.dispatch)
+  if (typeof subscription[room] === 'undefined') {
+    subscription[room] = action$.subscribe(questions.dispatch)
   }
 }
