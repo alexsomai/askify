@@ -1,5 +1,4 @@
 import merge from 'lodash/merge'
-import union from 'lodash/union'
 
 // Creates a reducer managing status, given the action types to handle,
 // and a function telling how to extract the key from an action.

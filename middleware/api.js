@@ -44,7 +44,7 @@ export default store => next => action => {
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState())
   }
-  if(typeof config === 'undefined') {
+  if (typeof config === 'undefined') {
     config = {}
   }
 

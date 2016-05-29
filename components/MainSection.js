@@ -15,18 +15,18 @@ export default class MainSection extends Component {
       userinfo
     } = this.props
 
-    if (errorMessage) {
-      return (
-        <div style={style}>
-          <h1 style={{ color: 'red' }}>{errorMessage}</h1>
-        </div>
-      )
-    }
-
     if (isFetching) {
       return (
         <div style={style}>
           <h1><i>{loadingLabel}</i></h1>
+        </div>
+      )
+    }
+
+    if (errorMessage) {
+      return (
+        <div style={style}>
+          <h1 style={{ color: 'red' }}>{errorMessage}</h1>
         </div>
       )
     }

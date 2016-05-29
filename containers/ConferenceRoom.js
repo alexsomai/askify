@@ -75,7 +75,7 @@ class ConferenceRoom extends Component {
   }
 
   render() {
-    const { questions, actions, userinfo, room, status } = this.props
+    const { questions, userinfo, room, status } = this.props
     return (
       <div>
         <MainSection
