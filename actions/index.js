@@ -85,6 +85,22 @@ export function loadQuestions(room) {
   }
 }
 
+export function addQuestionRequest(text, room) {
+  return {
+    payload: { room },
+    [CALL_API]: {
+      types: [ types.ADD_QUESTION_REQUEST, types.ADD_QUESTION_FAILURE ],
+      endpoint: '/questions/',
+      authenticated: true,
+      config: {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, room })
+      }
+    }
+  }
+}
+
 export function addQuestion(question) {
   return { type: types.ADD_QUESTION, payload: question }
 }

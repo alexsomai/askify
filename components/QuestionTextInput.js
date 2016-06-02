@@ -42,11 +42,13 @@ export default class QuestionTextInput extends Component {
           hintText="What do you think about ... ?"
           floatingLabelText="Question"
           multiLine={true}
+          disabled={this.props.isSubmitting}
           onChange={this.handleChange} />
         <br/>
         <RaisedButton
           onClick={this.handleSubmit}
           primary={true}
+          disabled={this.props.isSubmitting}
           label="Submit"/>
       </div>
     )
@@ -54,5 +56,6 @@ export default class QuestionTextInput extends Component {
 }
 
 QuestionTextInput.propTypes = {
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  isSubmitting: PropTypes.bool
 }

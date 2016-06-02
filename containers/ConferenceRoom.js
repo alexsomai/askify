@@ -35,15 +35,8 @@ class ConferenceRoom extends Component {
       return
     }
 
-    const { room } = this.props
-    fetch(`${API_ROOT}/questions`, {
-      method: 'post',
-      body: JSON.stringify({ text, room }),
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('id_token')}`,
-        'Content-Type': 'application/json'
-      }
-    })
+    const { room, actions } = this.props
+    actions.addQuestionRequest(text, room)
   }
 
   voteQuestion(question) {
@@ -75,19 +68,22 @@ class ConferenceRoom extends Component {
   }
 
   render() {
-    const { questions, userinfo, room, status } = this.props
+    const { questions, userinfo, room, status, submission } = this.props
     return (
       <div>
         <MainSection
           questions={questions[room]}
           userinfo={userinfo}
           isFetching={status.isFetching}
+          isSubmitting={submission.isFetching}
           errorMessage={status.errorMessage}
           onVoteQuestion={this.voteQuestion}
           onDoneQuestion={this.doneQuestion}
           loadingLabel={`Loading questions for '${room}' conference room...`}
           emptyRoomLabel={`Conference room '${room}' has no questions yet`} />
-        <QuestionTextInput onSubmit={this.submitQuestion} />
+        <QuestionTextInput
+          onSubmit={this.submitQuestion}
+          isSubmitting={submission.isFetching} />
         <BackToTop />
       </div>
     )
@@ -98,11 +94,13 @@ ConferenceRoom.propTypes = {
   questions: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
   status: PropTypes.object.isRequired,
+  submission: PropTypes.object.isRequired,
   room: PropTypes.string.isRequired
 }
 
 ConferenceRoom.defaultProps = {
-  status: { isFetching: false }
+  status: { isFetching: false },
+  submission: { isFetching: false }
 }
 
 function mapStateToProps(state, ownProps) {
@@ -110,6 +108,7 @@ function mapStateToProps(state, ownProps) {
   return {
     questions: state.questions,
     status: state.status.questions[room],
+    submission: state.status.submissions[room],
     room: room,
     userinfo: state.userinfo.data
   }

@@ -10,7 +10,7 @@ const style = {
 export default class MainSection extends Component {
   render() {
     const {
-      questions, isFetching, errorMessage, loadingLabel,
+      questions, isFetching, isSubmitting, errorMessage, loadingLabel,
       emptyRoomLabel, onVoteQuestion, onDoneQuestion,
       userinfo
     } = this.props
@@ -39,6 +39,7 @@ export default class MainSection extends Component {
       )
     }
 
+    const submitVisibility = isSubmitting ? 'visible' : 'hidden'
     return (
       <div style={style}>
         {questions
@@ -63,6 +64,9 @@ export default class MainSection extends Component {
                     doneDisabled={doneDisabled} />
           }
         )}
+        <div style={{ visibility: submitVisibility, textAlign: 'center', fontSize: 24 }}>
+          Submitting question...
+        </div>
       </div>
     )
   }
@@ -72,6 +76,7 @@ MainSection.propTypes = {
   questions: PropTypes.array,
   userinfo: PropTypes.object,
   isFetching: PropTypes.bool,
+  isSubmitting: PropTypes.bool,
   loadingLabel: PropTypes.string.isRequired,
   emptyRoomLabel: PropTypes.string.isRequired,
   onVoteQuestion: PropTypes.func.isRequired,

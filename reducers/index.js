@@ -14,6 +14,14 @@ const status = combineReducers({
       ActionTypes.QUESTIONS_FAILURE
     ],
     mapActionToKey: action => action.room
+  }),
+  submissions: checkStatus({
+    types: [
+      ActionTypes.ADD_QUESTION_REQUEST,
+      ActionTypes.ADD_QUESTION,
+      ActionTypes.ADD_QUESTION_FAILURE
+    ],
+    mapActionToKey: action => action.payload.room
   })
 })
 
