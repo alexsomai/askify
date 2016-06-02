@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import QuestionItem from './QuestionItem'
+import LargeSpinner from './LargeSpinner'
+import SmallSpinner from './SmallSpinner'
 
 const style = {
   position: 'absolute',
@@ -19,6 +21,7 @@ export default class MainSection extends Component {
       return (
         <div style={style}>
           <h1><i>{loadingLabel}</i></h1>
+          <LargeSpinner />
         </div>
       )
     }
@@ -64,8 +67,13 @@ export default class MainSection extends Component {
                     doneDisabled={doneDisabled} />
           }
         )}
-        <div style={{ visibility: submitVisibility, textAlign: 'center', fontSize: 24 }}>
+        <div style={{
+            marginTop: 20,
+            visibility: submitVisibility,
+            textAlign: 'center',
+            fontSize: 24 }}>
           Submitting question...
+          <SmallSpinner />
         </div>
       </div>
     )
