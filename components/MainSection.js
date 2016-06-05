@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import QuestionItem from './QuestionItem'
 import LargeSpinner from './LargeSpinner'
-import SmallSpinner from './SmallSpinner'
+import LoadingComponent from './LoadingComponent'
 
 const style = {
   position: 'absolute',
@@ -9,22 +9,12 @@ const style = {
   transform: 'translate(-50%)'
 }
 
-const loadingStyle = visibility => {
-  return {
-    position: 'absolute',
-    left: '50%',
-    fontSize: 24,
-    visibility: visibility,
-    textAlign: 'center'
-  }
-}
-
 export default class MainSection extends Component {
   render() {
     const {
-      questions, isFetching, isSubmitting, isUpdating, errorMessage, loadingLabel,
-      emptyRoomLabel, onVoteQuestion, onDoneQuestion,
-      userinfo
+      questions, isFetching, isSubmitting, isUpdating,
+      errorMessage, submittingErrorMessage, updatingErrorMessage,
+      loadingLabel, emptyRoomLabel, onVoteQuestion, onDoneQuestion, userinfo
     } = this.props
 
     if (isFetching) {
@@ -39,7 +29,15 @@ export default class MainSection extends Component {
     if (errorMessage) {
       return (
         <div style={style}>
-          <h1 style={{ color: 'red' }}>{errorMessage}</h1>
+          <h1 style={{ color: 'red' }}>
+            Failed to fetch questions, reason: '{errorMessage}'
+          </h1>
+          <LoadingComponent
+            isSubmitting={isSubmitting}
+            isUpdating={isUpdating}
+            submittingErrorMessage={submittingErrorMessage}
+            updatingErrorMessage={updatingErrorMessage}
+            />
         </div>
       )
     }
@@ -48,12 +46,16 @@ export default class MainSection extends Component {
       return (
         <div style={style}>
           <h1>{emptyRoomLabel}</h1>
+          <LoadingComponent
+            isSubmitting={isSubmitting}
+            isUpdating={isUpdating}
+            submittingErrorMessage={submittingErrorMessage}
+            updatingErrorMessage={updatingErrorMessage}
+            />
         </div>
       )
     }
 
-    const submitVisibility = isSubmitting ? 'visible' : 'hidden'
-    const updateVisibility = isUpdating ? 'visible' : 'hidden'
     return (
       <div style={style}>
         {questions
@@ -79,14 +81,12 @@ export default class MainSection extends Component {
                     doneDisabled={doneDisabled} />
           }
         )}
-        <div style={loadingStyle(submitVisibility)}>
-          Submitting question...
-          <SmallSpinner />
-        </div>
-        <div style={loadingStyle(updateVisibility)}>
-          Updating question...
-          <SmallSpinner />
-        </div>
+        <LoadingComponent
+          isSubmitting={isSubmitting}
+          isUpdating={isUpdating}
+          submittingErrorMessage={submittingErrorMessage}
+          updatingErrorMessage={updatingErrorMessage}
+          />
       </div>
     )
   }
@@ -102,7 +102,9 @@ MainSection.propTypes = {
   emptyRoomLabel: PropTypes.string.isRequired,
   onVoteQuestion: PropTypes.func.isRequired,
   onDoneQuestion: PropTypes.func.isRequired,
-  errorMessage: PropTypes.string
+  errorMessage: PropTypes.string,
+  submittingErrorMessage: PropTypes.string,
+  updatingErrorMessage: PropTypes.string
 }
 
 MainSection.defaultProps = {

@@ -62,9 +62,11 @@ class ConferenceRoom extends Component {
           questions={questions[room]}
           userinfo={userinfo}
           isFetching={status.isFetching}
-          isSubmitting={submitting.isFetching}
-          isUpdating={voting.isFetching || markingDone.isFetching}
           errorMessage={status.errorMessage}
+          isSubmitting={submitting.isFetching}
+          submittingErrorMessage={submitting.errorMessage}
+          isUpdating={voting.isFetching || markingDone.isFetching}
+          updatingErrorMessage={voting.errorMessage || markingDone.errorMessage}
           onVoteQuestion={this.voteQuestion}
           onDoneQuestion={this.doneQuestion}
           loadingLabel={`Loading questions for '${room}' conference room...`}
