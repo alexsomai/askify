@@ -15,11 +15,27 @@ const status = combineReducers({
     ],
     mapActionToKey: action => action.room
   }),
-  submissions: checkStatus({
+  submitting: checkStatus({
     types: [
       ActionTypes.ADD_QUESTION_REQUEST,
       ActionTypes.ADD_QUESTION,
       ActionTypes.ADD_QUESTION_FAILURE
+    ],
+    mapActionToKey: action => action.payload.room
+  }),
+  voting: checkStatus({
+    types: [
+      ActionTypes.VOTE_QUESTION_REQUEST,
+      ActionTypes.VOTE_QUESTION,
+      ActionTypes.VOTE_QUESTION_FAILURE
+    ],
+    mapActionToKey: action => action.payload.room
+  }),
+  markingDone: checkStatus({
+    types: [
+      ActionTypes.DONE_QUESTION_REQUEST,
+      ActionTypes.DONE_QUESTION,
+      ActionTypes.DONE_QUESTION_FAILURE
     ],
     mapActionToKey: action => action.payload.room
   })

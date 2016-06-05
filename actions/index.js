@@ -85,7 +85,7 @@ export function loadQuestions(room) {
   }
 }
 
-export function addQuestionRequest(text, room) {
+export function addQuestionRequest(room, text) {
   return {
     payload: { room },
     [CALL_API]: {
@@ -105,8 +105,40 @@ export function addQuestion(question) {
   return { type: types.ADD_QUESTION, payload: question }
 }
 
+export function voteQuestionRequest(room, id, votes) {
+  return {
+    payload: { room },
+    [CALL_API]: {
+      types: [ types.VOTE_QUESTION_REQUEST, types.VOTE_QUESTION_FAILURE ],
+      endpoint: `/question/${id}`,
+      authenticated: true,
+      config: {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ votes: votes + 1 })
+      }
+    }
+  }
+}
+
 export function voteQuestion(question) {
   return { type: types.VOTE_QUESTION, payload: question }
+}
+
+export function doneQuestionRequest(room, id, done) {
+  return {
+    payload: { room },
+    [CALL_API]: {
+      types: [ types.DONE_QUESTION_REQUEST, types.DONE_QUESTION_FAILURE ],
+      endpoint: `/question/${id}`,
+      authenticated: true,
+      config: {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ done: !done })
+      }
+    }
+  }
 }
 
 export function doneQuestion(question) {

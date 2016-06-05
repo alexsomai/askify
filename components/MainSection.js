@@ -9,10 +9,20 @@ const style = {
   transform: 'translate(-50%)'
 }
 
+const loadingStyle = visibility => {
+  return {
+    position: 'absolute',
+    left: '50%',
+    fontSize: 24,
+    visibility: visibility,
+    textAlign: 'center'
+  }
+}
+
 export default class MainSection extends Component {
   render() {
     const {
-      questions, isFetching, isSubmitting, errorMessage, loadingLabel,
+      questions, isFetching, isSubmitting, isUpdating, errorMessage, loadingLabel,
       emptyRoomLabel, onVoteQuestion, onDoneQuestion,
       userinfo
     } = this.props
@@ -43,6 +53,7 @@ export default class MainSection extends Component {
     }
 
     const submitVisibility = isSubmitting ? 'visible' : 'hidden'
+    const updateVisibility = isUpdating ? 'visible' : 'hidden'
     return (
       <div style={style}>
         {questions
@@ -56,8 +67,9 @@ export default class MainSection extends Component {
             return new Date(a.created_at) - new Date(b.created_at)
           })
           .map(question => {
-            const thumbUpDisabled = question.voted_by.includes(userinfo.id) || question.done
-            const doneDisabled = question.user_id !== userinfo.id
+            const thumbUpDisabled = question.voted_by.includes(userinfo.id) ||
+              question.done || isUpdating
+            const doneDisabled = question.user_id !== userinfo.id || isUpdating
             return <QuestionItem
                     key={question.id}
                     question={question}
@@ -67,12 +79,12 @@ export default class MainSection extends Component {
                     doneDisabled={doneDisabled} />
           }
         )}
-        <div style={{
-            marginTop: 20,
-            visibility: submitVisibility,
-            textAlign: 'center',
-            fontSize: 24 }}>
+        <div style={loadingStyle(submitVisibility)}>
           Submitting question...
+          <SmallSpinner />
+        </div>
+        <div style={loadingStyle(updateVisibility)}>
+          Updating question...
           <SmallSpinner />
         </div>
       </div>
@@ -85,6 +97,7 @@ MainSection.propTypes = {
   userinfo: PropTypes.object,
   isFetching: PropTypes.bool,
   isSubmitting: PropTypes.bool,
+  isUpdating: PropTypes.bool,
   loadingLabel: PropTypes.string.isRequired,
   emptyRoomLabel: PropTypes.string.isRequired,
   onVoteQuestion: PropTypes.func.isRequired,

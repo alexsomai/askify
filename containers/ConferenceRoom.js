@@ -36,46 +36,34 @@ class ConferenceRoom extends Component {
     }
 
     const { room, actions } = this.props
-    actions.addQuestionRequest(text, room)
+    actions.addQuestionRequest(room, text)
   }
 
   voteQuestion(question) {
+    const { room, actions } = this.props
     const { id, votes } = question
-
-    fetch(`${API_ROOT}/question/${id}`, {
-      method: 'put',
-      body: JSON.stringify({
-        votes: votes + 1
-      }),
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('id_token')}`,
-        'Content-Type': 'application/json'
-      }
-    })
+    actions.voteQuestionRequest(room, id, votes)
   }
 
   doneQuestion(question) {
-    fetch(`${API_ROOT}/question/${question.id}`, {
-      method: 'put',
-      body: JSON.stringify({
-        done: !question.done
-      }),
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('id_token')}`,
-        'Content-Type': 'application/json'
-      }
-    })
+    const { room, actions } = this.props
+    const { id, done } = question
+    actions.doneQuestionRequest(room, id, done)
   }
 
   render() {
-    const { questions, userinfo, room, status, submission } = this.props
+    const {
+      questions, userinfo, room, status,
+      submitting, voting, markingDone
+    } = this.props
     return (
       <div>
         <MainSection
           questions={questions[room]}
           userinfo={userinfo}
           isFetching={status.isFetching}
-          isSubmitting={submission.isFetching}
+          isSubmitting={submitting.isFetching}
+          isUpdating={voting.isFetching || markingDone.isFetching}
           errorMessage={status.errorMessage}
           onVoteQuestion={this.voteQuestion}
           onDoneQuestion={this.doneQuestion}
@@ -83,7 +71,7 @@ class ConferenceRoom extends Component {
           emptyRoomLabel={`Conference room '${room}' has no questions yet`} />
         <QuestionTextInput
           onSubmit={this.submitQuestion}
-          isSubmitting={submission.isFetching} />
+          isSubmitting={submitting.isFetching} />
         <BackToTop />
       </div>
     )
@@ -94,13 +82,17 @@ ConferenceRoom.propTypes = {
   questions: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
   status: PropTypes.object.isRequired,
-  submission: PropTypes.object.isRequired,
+  submitting: PropTypes.object.isRequired,
+  voting: PropTypes.object.isRequired,
+  markingDone: PropTypes.object.isRequired,
   room: PropTypes.string.isRequired
 }
 
 ConferenceRoom.defaultProps = {
   status: { isFetching: false },
-  submission: { isFetching: false }
+  submitting: { isFetching: false },
+  voting: { isFetching: false },
+  markingDone: { isFetching: false }
 }
 
 function mapStateToProps(state, ownProps) {
@@ -108,7 +100,9 @@ function mapStateToProps(state, ownProps) {
   return {
     questions: state.questions,
     status: state.status.questions[room],
-    submission: state.status.submissions[room],
+    submitting: state.status.submitting[room],
+    voting: state.status.voting[room],
+    markingDone: state.status.markingDone[room],
     room: room,
     userinfo: state.userinfo.data
   }
