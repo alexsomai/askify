@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import SmallSpinner from './SmallSpinner'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 
@@ -29,10 +30,16 @@ export default class AuthComponent extends Component {
   }
 
   render() {
-    const { errorMessage } = this.props
+    const { isFetching, loadingMessage, errorMessage } = this.props
 
     return (
       <div className="center">
+        {isFetching &&
+          <div>
+            <p>{loadingMessage}</p>
+            <SmallSpinner />
+          </div>
+        }
         {errorMessage &&
           <p style={{color:'red'}}>{errorMessage}</p>
         }
@@ -53,7 +60,8 @@ export default class AuthComponent extends Component {
         <RaisedButton
           label={this.props.buttonLabel}
           primary={true}
-          onClick={this.handleClick} />
+          onClick={this.handleClick}
+          disabled={isFetching} />
       </div>
     )
   }
@@ -64,5 +72,7 @@ AuthComponent.propTypes = {
   linkText: PropTypes.string.isRequired,
   buttonLabel: PropTypes.string.isRequired,
   onSubmitClick: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool,
+  loadingMessage: PropTypes.string,
   errorMessage: PropTypes.string
 }

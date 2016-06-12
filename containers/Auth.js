@@ -12,12 +12,18 @@ class Auth extends Component {
   }
 
   showSignUp() {
+    if (this.props.auth.isFetching) {
+      return
+    }
     this.setState({
       login: false
     })
   }
 
   showLogin() {
+    if (this.props.auth.isFetching) {
+      return
+    }
     this.setState({
       login: true
     })
@@ -31,19 +37,32 @@ class Auth extends Component {
       )
     }
 
-    const login = this.state.login
-    const linkText = login ? 'I don\'t have an account' : 'I already have an account'
-    const linkTo = login ? this.showSignUp.bind(this) : this.showLogin.bind(this)
-    const buttonLabel = login ? 'Login' : 'Sign Up'
-    const onAuth = login ? actions.loginUser : actions.registerUser
+    const isLogin = this.state.login
+    const login = isLogin ?
+      {
+        linkText: 'I do not have an account',
+        linkTo: this.showSignUp.bind(this),
+        buttonLabel: 'Login',
+        onAuth: actions.loginUser,
+        loadingMessage: 'Logging in ...'
+      } :
+      {
+        linkText: 'I already have an account',
+        linkTo: this.showLogin.bind(this),
+        buttonLabel: 'Sign Up',
+        onAuth: actions.registerUser,
+        loadingMessage: 'Signing up ...'
+      }
 
     return (
       <div>
         <AuthComponent
-          linkText={linkText}
-          linkTo={linkTo}
-          buttonLabel={buttonLabel}
-          onSubmitClick={onAuth}
+          linkText={login.linkText}
+          linkTo={login.linkTo}
+          buttonLabel={login.buttonLabel}
+          onSubmitClick={login.onAuth}
+          isFetching={auth.isFetching}
+          loadingMessage={login.loadingMessage}
           errorMessage={auth.errorMessage} />
       </div>
     )
