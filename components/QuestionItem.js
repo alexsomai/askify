@@ -12,13 +12,14 @@ const style = {
     backgroundColor: 'inherit'
   },
   doneQuestion: {
-    backgroundColor: '#b8b8b8'
+    backgroundColor: '#b8b8b8',
+    opacity: '.15'
   },
   header: {
     padding: '16px 0 0 16px'
   },
   text: {
-    padding: 0
+    fontSize: '16'
   }
 }
 
@@ -48,23 +49,25 @@ export default class QuestionItem extends Component {
         <CardHeader style={style.header}
           title={question.username}
           subtitle={votes}
-          avatar={question.picture} />
+          avatar={question.picture}>
+            <div style={{float:'right'}}>
+              <IconButton
+                iconClassName="material-icons"
+                onClick={this.handleVote}
+                disabled={thumbUpDisabled}
+                tooltip="Vote question">
+                thumb_up
+              </IconButton>
+              <IconButton
+                iconClassName="material-icons"
+                onClick={this.handleDone}
+                disabled={doneDisabled}
+                tooltip={doneQuestion.tooltip}>
+                {doneQuestion.icon}
+              </IconButton>
+            </div>
+        </CardHeader>
         <CardText style={style.text}>
-          <IconButton
-            iconClassName="material-icons"
-            onClick={this.handleVote}
-            disabled={thumbUpDisabled}
-            tooltip="Vote question">
-            thumb_up
-          </IconButton>
-          <IconButton
-            iconClassName="material-icons"
-            style={{float: 'right'}}
-            onClick={this.handleDone}
-            disabled={doneDisabled}
-            tooltip={doneQuestion.tooltip}>
-            {doneQuestion.icon}
-          </IconButton>
           {question.text}
         </CardText>
       </Card>

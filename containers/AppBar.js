@@ -53,7 +53,6 @@ export default class MyAppBar extends Component {
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}
             >
-              <MenuItem primaryText="Help" />
               <MenuItem primaryText="Sign out" onTouchTap={this.signOut} />
             </IconMenu>
           }

@@ -3,8 +3,6 @@ import SmallSpinner from './SmallSpinner'
 
 const loadingStyle = visibility => {
   return {
-    position: 'absolute',
-    left: '50%',
     fontSize: 24,
     visibility: visibility,
     textAlign: 'center'

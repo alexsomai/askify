@@ -15,7 +15,6 @@ export default class App extends Component {
     return (
       <div>
         <JoinRoom onSubmit={this.joinRoom}/>
-        <AddRoom />
       </div>
     )
   }
