@@ -12,7 +12,7 @@ export default class BackToTop extends Component {
             className="material-icons">
             keyboard_arrow_up
           </FontIcon>
-      </FloatingActionButton>
+        </FloatingActionButton>
       </ScrollToTop>
     )
   }

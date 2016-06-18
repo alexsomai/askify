@@ -19,7 +19,7 @@ const style = {
     padding: '16px 0 0 16px'
   },
   text: {
-    fontSize: '16'
+    fontSize: 16
   }
 }
 

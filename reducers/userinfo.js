@@ -13,7 +13,8 @@ export default function userinfo(state = { isFetching: false }, action) {
       })
     case USERINFO_FAILURE:
       return Object.assign({}, state, {
-        isFetching: false
+        isFetching: false,
+        errorMessage: action.error
       })
     default:
       return state

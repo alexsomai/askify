@@ -1,20 +1,19 @@
 import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router'
 
 import AppBar from 'material-ui/AppBar'
-import IconMenu from 'material-ui/IconMenu'
 import MenuItem from 'material-ui/MenuItem'
-import IconButton from 'material-ui/IconButton'
 import FlatButton from 'material-ui/FlatButton'
 import Drawer from 'material-ui/Drawer'
 import FontIcon from 'material-ui/FontIcon'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
-
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
+import TopUserInfo from '../components/TopUserInfo'
 
-export default class MyAppBar extends Component {
+class AskifyAppBar extends Component {
   constructor(props) {
     super(props)
     this.handleToggle = this.handleToggle.bind(this)
@@ -40,21 +39,18 @@ export default class MyAppBar extends Component {
   }
 
   render() {
+    const { userinfo } = this.props
     return (
       <div>
         <AppBar
           title="Askify"
           onLeftIconButtonTouchTap={this.handleToggle}
           iconElementRight={
-            <IconMenu
-              iconButtonElement={
-                <IconButton><MoreVertIcon /></IconButton>
-              }
-              targetOrigin={{horizontal: 'right', vertical: 'top'}}
-              anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-            >
-              <MenuItem primaryText="Sign out" onTouchTap={this.signOut} />
-            </IconMenu>
+            localStorage.getItem('id_token') &&
+            <TopUserInfo
+              userinfo={userinfo}
+              signOut={this.signOut}
+            />
           }
         />
         <Drawer
@@ -81,6 +77,20 @@ export default class MyAppBar extends Component {
   }
 }
 
-MyAppBar.childContextTypes = {
+AskifyAppBar.propTypes = {
+  userinfo: PropTypes.object
+}
+
+AskifyAppBar.childContextTypes = {
   muiTheme: PropTypes.object.isRequired
 }
+
+function mapStateToProps(state, ownProps) {
+  return {
+    userinfo: state.userinfo
+  }
+}
+
+export default connect(
+  mapStateToProps
+)(AskifyAppBar)

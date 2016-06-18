@@ -108,5 +108,6 @@ MainSection.propTypes = {
 }
 
 MainSection.defaultProps = {
-  questions: []
+  questions: [],
+  userinfo: {}
 }
