@@ -19,6 +19,7 @@ const style = {
     padding: '16px 0 0 16px'
   },
   text: {
+    wordWrap: 'break-word',
     fontSize: 16
   }
 }

@@ -1,4 +1,5 @@
 import merge from 'lodash/merge'
+import 'isomorphic-fetch'
 
 export const API_ROOT = 'http://localhost:3001'
 
