@@ -45,7 +45,7 @@
     "babel-preset-react-hmre": "^1.1.1",
     "babel-register": "^6.9.0",
     "expect": "^1.20.1",
-    "mocha": "^2.5.3",
+    "mocha": "^4.1.0",
     "redux-devtools": "^3.2.0",
     "redux-devtools-dock-monitor": "^1.1.0",
     "redux-devtools-log-monitor": "^1.0.5",
