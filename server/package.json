@@ -1,7 +1,7 @@
 {
-  "name": "ask-me-server",
+  "name": "askify-server",
   "version": "0.0.1",
-  "description": "",
+  "description": "Real-time question based API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

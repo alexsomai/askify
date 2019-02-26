@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import AuthComponent from '../components/AuthComponent'
 import App from './App'
 import * as LoginActions from '../actions'
