@@ -1,7 +1,8 @@
-const path = require('path')
-const webpack = require('webpack')
+const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
+  mode: 'none',
   entry: [
     'webpack-hot-middleware/client',
     './index'
@@ -12,16 +13,16 @@ module.exports = {
     publicPath: '/static/'
   },
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin()
   ],
   module: {
-    loaders: [{
+    rules: [{
       test: /\.js$/,
       exclude: /node_modules/,
-      loader: 'babel',
-      include: __dirname
+      include: __dirname,
+      use: ['babel-loader']
     }]
   }
-}
+};
