@@ -4,6 +4,14 @@
 
 A real-time web application made with ❤ using React, Redux, Node.js and RethinkDB.
 
+## Application Architecture
+
+### Overall Architecture
+![Overall Architecture](docs/application-architecture.png)
+
+### Client Side Architecture
+![Client Architecture](docs/client-architecture.png)
+
 ## Installation
 
 **Step 1.** [Install RethinkDB](https://www.rethinkdb.com/docs/install/).  
