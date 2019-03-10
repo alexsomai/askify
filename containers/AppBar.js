@@ -64,12 +64,18 @@ class AskifyAppBar extends Component {
             onTouchTap={this.handleClose}
             containerElement={<Link to="/" />}
           >
-            <FontIcon className="material-icons">home</FontIcon>
-            Home
+            <FlatButton
+              style={{ backgroundColor: 'transparent' }}
+              icon={<FontIcon className="material-icons">home</FontIcon>}
+              label="Home"
+            />
           </MenuItem>
           <MenuItem onTouchTap={this.handleClose}>
-            <FontIcon className="material-icons">close</FontIcon>
-            Close
+            <FlatButton
+              style={{ backgroundColor: 'transparent' }}
+              icon={<FontIcon className="material-icons">close</FontIcon>}
+              label="Close"
+            />
           </MenuItem>
         </Drawer>
         {this.props.children}

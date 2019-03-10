@@ -46,7 +46,7 @@ export default class TopUserInfo extends Component {
       <div style={style}>
         {userinfo.data && <Avatar src={userinfo.data.picture}/>}
         <span style={style.message}>
-              Welcome, {userinfo.data && userinfo.data.username}
+              &nbsp;Welcome, {userinfo.data && userinfo.data.username}
             </span>
         <IconMenu
           iconButtonElement={
