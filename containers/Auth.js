@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import AuthComponent from '../components/AuthComponent'
-import App from './App'
 import * as LoginActions from '../actions'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { Redirect } from "react-router";
 
 class Auth extends Component {
   constructor(props) {
@@ -32,9 +32,7 @@ class Auth extends Component {
   render() {
     const { auth, actions } = this.props
     if (auth.isAuthenticated) {
-      return (
-        <App />
-      )
+      return <Redirect to="/" />;
     }
 
     const isLogin = this.state.login
@@ -70,7 +68,7 @@ class Auth extends Component {
 }
 
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return {
     auth: state.auth
   }
