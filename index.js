@@ -1,21 +1,18 @@
 import 'babel-polyfill'
 import React from 'react'
-import { render } from 'react-dom'
-import { browserHistory } from 'react-router'
-import { syncHistoryWithStore } from 'react-router-redux'
+import ReactDOM from 'react-dom'
 import Root from './containers/Root'
-import configureStore from './store/configureStore'
+import configureStore, { history } from './store/configureStore'
 import { loadUserInfo } from './actions'
-import injectTapEventPlugin from 'react-tap-event-plugin'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-injectTapEventPlugin()
+const store = configureStore();
 
-const store = configureStore()
-const history = syncHistoryWithStore(browserHistory, store)
+store.dispatch(loadUserInfo());
 
-store.dispatch(loadUserInfo())
-
-render(
-  <Root store={store} history={history} />,
+ReactDOM.render(
+  <MuiThemeProvider>
+    <Root store={store} history={history} />
+  </MuiThemeProvider>,
   document.getElementById('app')
-)
+);
