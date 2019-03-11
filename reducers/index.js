@@ -1,9 +1,9 @@
-import { combineReducers } from 'redux'
 import questions from './questions'
 import checkStatus from './status'
 import auth from './auth'
 import userinfo from './userinfo'
-import { routerReducer as routing } from 'react-router-redux'
+import { combineReducers } from 'redux'
+import { connectRouter } from 'connected-react-router'
 import * as ActionTypes from '../constants/ActionTypes'
 
 const status = combineReducers({
@@ -39,14 +39,14 @@ const status = combineReducers({
     ],
     mapActionToKey: action => action.payload.room
   })
-})
+});
 
-const rootReducer = combineReducers({
+const rootReducer = (history) => combineReducers({
   questions,
   status,
   auth,
   userinfo,
-  routing
-})
+  router: connectRouter(history)
+});
 
 export default rootReducer

@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 
 import AppBar from 'material-ui/AppBar'
 import MenuItem from 'material-ui/MenuItem'
+import IconButton from 'material-ui/IconButton'
 import FlatButton from 'material-ui/FlatButton'
 import Drawer from 'material-ui/Drawer'
 import FontIcon from 'material-ui/FontIcon'
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
-import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import MenuIcon from 'material-ui/svg-icons/navigation/menu'
 
 import TopUserInfo from '../components/TopUserInfo'
 
@@ -20,10 +19,6 @@ class AskifyAppBar extends Component {
     this.handleToggle = this.handleToggle.bind(this)
     this.handleClose = this.handleClose.bind(this)
     this.state = { open: false }
-  }
-
-  getChildContext() {
-    return { muiTheme: getMuiTheme(baseTheme) }
   }
 
   signOut() {
@@ -45,7 +40,11 @@ class AskifyAppBar extends Component {
       <div>
         <AppBar
           title="Askify"
-          onLeftIconButtonTouchTap={this.handleToggle}
+          iconElementLeft={
+            <IconButton onClick={this.handleToggle}>
+              <MenuIcon />
+            </IconButton>
+          }
           iconElementRight={
             localStorage.getItem('id_token') &&
             <TopUserInfo
@@ -58,10 +57,10 @@ class AskifyAppBar extends Component {
           docked={false}
           width={200}
           open={this.state.open}
-          onRequestChange={open => this.setState({open})}
-          >
+          onRequestChange={open => this.setState({ open })}
+        >
           <MenuItem
-            onTouchTap={this.handleClose}
+            onClick={this.handleClose}
             containerElement={<Link to="/" />}
           >
             <FlatButton
@@ -70,7 +69,7 @@ class AskifyAppBar extends Component {
               label="Home"
             />
           </MenuItem>
-          <MenuItem onTouchTap={this.handleClose}>
+          <MenuItem onClick={this.handleClose}>
             <FlatButton
               style={{ backgroundColor: 'transparent' }}
               icon={<FontIcon className="material-icons">close</FontIcon>}
@@ -86,13 +85,9 @@ class AskifyAppBar extends Component {
 
 AskifyAppBar.propTypes = {
   userinfo: PropTypes.object
-}
+};
 
-AskifyAppBar.childContextTypes = {
-  muiTheme: PropTypes.object.isRequired
-}
-
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return {
     userinfo: state.userinfo
   }

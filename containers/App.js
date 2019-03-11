@@ -1,21 +1,30 @@
 import React, { Component } from 'react'
 import JoinRoom from '../components/JoinRoom'
-import AddRoom from '../components/AddRoom'
-import { browserHistory } from 'react-router'
+import { push } from 'connected-react-router'
+import { connect } from "react-redux";
 
-export default class App extends Component {
-  joinRoom(roomValue) {
-    if(!roomValue) {
+class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.joinRoomLocal = this.joinRoomLocal.bind(this)
+  }
+
+  joinRoomLocal(roomValue) {
+    if (!roomValue) {
       return
     }
-    browserHistory.push(`/${roomValue}`)
+
+    this.props.push(`${roomValue}`)
   }
 
   render() {
     return (
       <div>
-        <JoinRoom onSubmit={this.joinRoom}/>
+        <JoinRoom onSubmit={this.joinRoomLocal} />
       </div>
     )
   }
 }
+
+export default connect(null, { push })(App)

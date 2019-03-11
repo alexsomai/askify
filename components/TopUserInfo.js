@@ -57,7 +57,7 @@ export default class TopUserInfo extends Component {
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         >
-          <MenuItem primaryText="Sign out" onTouchTap={this.props.signOut}/>
+          <MenuItem primaryText="Sign out" onClick={this.props.signOut}/>
         </IconMenu>
       </div>
     )
