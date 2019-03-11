@@ -1,18 +1,15 @@
 import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Root from './containers/Root'
+import App from './App'
 import configureStore, { history } from './store/configureStore'
 import { loadUserInfo } from './actions'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 const store = configureStore();
 
 store.dispatch(loadUserInfo());
 
 ReactDOM.render(
-  <MuiThemeProvider>
-    <Root store={store} history={history} />
-  </MuiThemeProvider>,
+  <App store={store} history={history} />,
   document.getElementById('app')
 );

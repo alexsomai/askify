@@ -3,7 +3,7 @@ import JoinRoom from '../components/JoinRoom'
 import { push } from 'connected-react-router'
 import { connect } from "react-redux";
 
-class App extends Component {
+class Home extends Component {
 
   constructor(props) {
     super(props);
@@ -27,4 +27,4 @@ class App extends Component {
   }
 }
 
-export default connect(null, { push })(App)
+export default connect(null, { push })(Home)
