@@ -1,15 +1,32 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import SmallSpinner from './SmallSpinner'
-import TextField from 'material-ui/TextField'
-import RaisedButton from 'material-ui/RaisedButton'
+import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
-export default class AuthComponent extends Component {
+const styles = theme => ({
+  button: {
+    margin: theme.spacing.unit,
+  },
+  textField: {
+    margin: theme.spacing.unit,
+    display: 'block'
+  },
+  alignLeft: {
+    textAlign: 'left'
+  },
+  errorMessage: {
+    color: 'red'
+  }
+});
+
+class AuthComponent extends Component {
   constructor(props) {
-    super(props)
-    this.handleUsernameChange = this.handleUsernameChange.bind(this)
-    this.handlePasswordChange = this.handlePasswordChange.bind(this)
-    this.handleClick = this.handleClick.bind(this)
+    super(props);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.state = { username: '', password: '' }
   }
 
@@ -22,47 +39,44 @@ export default class AuthComponent extends Component {
   }
 
   handleClick() {
-    const username = this.state.username.trim()
-    const password = this.state.password.trim()
-    if(!username || !password){
+    const username = this.state.username.trim();
+    const password = this.state.password.trim();
+    if (!username || !password) {
       return
     }
     this.props.onSubmitClick({ username, password })
   }
 
   render() {
-    const { isFetching, loadingMessage, errorMessage } = this.props
+    const { classes, isFetching, loadingMessage, errorMessage } = this.props;
 
     return (
       <div className="center">
-        {isFetching &&
-          <div>
-            <p>{loadingMessage}</p>
-            <SmallSpinner />
-          </div>
-        }
-        {errorMessage &&
-          <p style={{color:'red'}}>{errorMessage}</p>
-        }
-        <TextField ref="username"
-         floatingLabelText="Username"
-         onChange={this.handleUsernameChange} />
-        <br/>
-        <TextField ref="password"
-          floatingLabelText="Password"
+        {isFetching && <div><p>{loadingMessage}</p><SmallSpinner /></div>}
+
+        {errorMessage && <p className={classes.errorMessage}>{errorMessage}</p>}
+
+        <TextField
+          label="Username"
+          onChange={this.handleUsernameChange}
+          className={classes.textField}
+        />
+
+        <TextField
+          label="Password"
           type="password"
-          onChange={this.handlePasswordChange} />
-        <br/>
-        <br/>
-        <div style={{ textAlign: 'left' }}>
+          onChange={this.handlePasswordChange}
+          className={classes.textField}
+        />
+
+        <div className={classes.alignLeft}>
           <p onClick={this.props.linkTo}>{this.props.linkText}</p>
         </div>
-        <br/>
-        <RaisedButton
-          label={this.props.buttonLabel}
-          primary={true}
-          onClick={this.handleClick}
-          disabled={isFetching} />
+
+        <Button variant="contained" color="primary" onClick={this.handleClick}
+                disabled={isFetching} className={classes.button}>
+          {this.props.buttonLabel}
+        </Button>
       </div>
     )
   }
@@ -75,5 +89,8 @@ AuthComponent.propTypes = {
   onSubmitClick: PropTypes.func.isRequired,
   isFetching: PropTypes.bool,
   loadingMessage: PropTypes.string,
-  errorMessage: PropTypes.string
-}
+  errorMessage: PropTypes.string,
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(AuthComponent);
