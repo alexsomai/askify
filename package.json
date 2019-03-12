@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/alexsomai/ask-me#readme",
   "dependencies": {
+    "@material-ui/core": "^3.9.2",
     "babel-polyfill": "^6.9.1",
     "connected-react-router": "^6.3.1",
     "express": "^4.16.4",

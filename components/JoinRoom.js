@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import TextField from 'material-ui/TextField'
-import RaisedButton from 'material-ui/RaisedButton'
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 export default class JoinRoom extends Component {
   constructor(props) {
@@ -30,13 +30,12 @@ export default class JoinRoom extends Component {
           id="join-room-text-field"
           value={this.state.text}
           onChange={this.handleChange}
-          hintText="conference-room-1"
-          floatingLabelText="Conference Room" />
-        <br/>
-        <RaisedButton
-          label="Join"
-          primary={true}
-          onClick={this.handleSubmit} />
+          placeholder="conference-room-1"
+          label="Conference Room" />
+        <br />
+        <Button variant="contained" color="primary" onClick={this.handleSubmit} style={{ marginTop: 20 }}>
+          Join
+        </Button>
       </div>
     )
   }
