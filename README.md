@@ -1,5 +1,7 @@
 # Askify
 
+[![CircleCI](https://circleci.com/gh/alexsomai/askify/tree/master.svg?style=svg)](https://circleci.com/gh/alexsomai/askify/tree/master)
+
 ## About
 
 A question based real-time web application made with React, Redux, Express and RethinkDB. 🙋 
