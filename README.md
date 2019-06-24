@@ -1,8 +1,18 @@
 # Askify
 
+[![CircleCI](https://circleci.com/gh/alexsomai/askify/tree/master.svg?style=svg)](https://circleci.com/gh/alexsomai/askify/tree/master)
+
 ## About
 
-A real-time web application made with ❤ using React, Redux, Node.js and RethinkDB.
+A question based real-time web application made with React, Redux, Express and RethinkDB. 🙋 
+
+## Application Architecture
+
+### Overall Architecture
+![Overall Architecture](docs/application-architecture.png)
+
+### Client Side Architecture
+![Client Architecture](docs/client-architecture.png)
 
 ## Installation
 
