@@ -1,10 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
-import Avatar from 'material-ui/Avatar';
-import IconMenu from 'material-ui/IconMenu'
-import MenuItem from 'material-ui/MenuItem'
-import IconButton from 'material-ui/IconButton'
+import Avatar from '@material-ui/core/Avatar';
+import OptionsMenu from "./OptionsMenu";
 
 const style = {
   display: 'flex',
@@ -16,13 +13,16 @@ const style = {
   errorMessage: {
     color: 'red',
     marginTop: 15
+  },
+  avatar: {
+    backgroundColor: '#b8b8b8'
   }
 };
 
 export default class TopUserInfo extends Component {
   render() {
-    const {userinfo} = this.props;
-    if (userinfo.isFetching) {
+    const { userInfo } = this.props;
+    if (userInfo.isFetching) {
       return (
         <div style={style}>
           <span style={style.message}>
@@ -32,11 +32,11 @@ export default class TopUserInfo extends Component {
       )
     }
 
-    if (userinfo.errorMessage) {
+    if (userInfo.errorMessage) {
       return (
         <div style={style}>
           <span style={style.errorMessage}>
-            `Failed to fetch user details, reason: '{userinfo.errorMessage}'`
+            `Failed to fetch user details, reason: '{userInfo.errorMessage}'`
           </span>
         </div>
       )
@@ -44,21 +44,11 @@ export default class TopUserInfo extends Component {
 
     return (
       <div style={style}>
-        {userinfo.data && <Avatar src={userinfo.data.picture}/>}
+        {userInfo.data && <Avatar src={userInfo.data.picture} style={style.avatar} />}
         <span style={style.message}>
-              &nbsp;Welcome, {userinfo.data && userinfo.data.username}
-            </span>
-        <IconMenu
-          iconButtonElement={
-            <IconButton iconClassName="material-icons" iconStyle={{color: '#ffffff'}}>
-              more_vert
-            </IconButton>
-          }
-          targetOrigin={{horizontal: 'right', vertical: 'top'}}
-          anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-        >
-          <MenuItem primaryText="Sign out" onClick={this.props.signOut}/>
-        </IconMenu>
+          &nbsp;Welcome, {userInfo.data && userInfo.data.username}
+        </span>
+        <OptionsMenu signOut={this.props.signOut} />
       </div>
     )
   }
@@ -66,5 +56,5 @@ export default class TopUserInfo extends Component {
 
 TopUserInfo.propTypes = {
   signOut: PropTypes.func.isRequired,
-  userinfo: PropTypes.object.isRequired
+  userInfo: PropTypes.object.isRequired
 };

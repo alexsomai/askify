@@ -48,7 +48,7 @@ class AskifyAppBar extends Component {
           iconElementRight={
             localStorage.getItem('id_token') &&
             <TopUserInfo
-              userinfo={userinfo}
+              userInfo={userinfo}
               signOut={this.signOut}
             />
           }
