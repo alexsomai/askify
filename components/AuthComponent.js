@@ -7,10 +7,10 @@ import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1)
   },
   textField: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     display: 'block'
   },
   alignLeft: {

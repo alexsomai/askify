@@ -1,18 +1,15 @@
 import React, { Component } from 'react'
 import ScrollToTop from 'react-scroll-up'
-import FontIcon from 'material-ui/FontIcon'
-import FloatingActionButton from 'material-ui/FloatingActionButton'
+import Icon from '@material-ui/core/Icon'
+import Fab from '@material-ui/core/Fab';
 
 export default class BackToTop extends Component {
   render() {
     return (
       <ScrollToTop showUnder={100}>
-        <FloatingActionButton>
-          <FontIcon
-            className="material-icons">
-            keyboard_arrow_up
-          </FontIcon>
-        </FloatingActionButton>
+        <Fab color="primary">
+          <Icon>keyboard_arrow_up</Icon>
+        </Fab>
       </ScrollToTop>
     )
   }
