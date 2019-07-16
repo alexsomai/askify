@@ -1,28 +1,53 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-
-import AppBar from 'material-ui/AppBar'
-import MenuItem from 'material-ui/MenuItem'
-import IconButton from 'material-ui/IconButton'
-import FlatButton from 'material-ui/FlatButton'
-import Drawer from 'material-ui/Drawer'
-import FontIcon from 'material-ui/FontIcon'
-import MenuIcon from 'material-ui/svg-icons/navigation/menu'
-
+import { Link as RouterLink } from 'react-router-dom';
+import Link from '@material-ui/core/Link';
+import AppBar from '@material-ui/core/AppBar';
+import Drawer from '@material-ui/core/Drawer'
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import MenuIcon from '@material-ui/icons/menu';
+import HomeIcon from '@material-ui/icons/home';
+import CloseIcon from '@material-ui/icons/close';
 import TopUserInfo from '../components/TopUserInfo'
 
+const style = {
+  root: {
+    flexGrow: 1
+  },
+  list: {
+    width: 200
+  },
+  title: {
+    flexGrow: 1
+  },
+  link: {
+    color: 'inherit',
+    textDecoration: 'none'
+  }
+};
+
 class AskifyAppBar extends Component {
+
   constructor(props) {
-    super(props)
-    this.handleToggle = this.handleToggle.bind(this)
-    this.handleClose = this.handleClose.bind(this)
+    super(props);
+    this.handleToggle = this.handleToggle.bind(this);
+    this.handleClose = this.handleClose.bind(this);
     this.state = { open: false }
   }
 
+  isAuth() {
+    return localStorage.getItem('id_token')
+  }
+
   signOut() {
-    localStorage.removeItem('id_token')
+    localStorage.removeItem('id_token');
     window.location.href = '/'
   }
 
@@ -35,47 +60,33 @@ class AskifyAppBar extends Component {
   }
 
   render() {
-    const { userinfo } = this.props
+    const { userinfo } = this.props;
     return (
-      <div>
-        <AppBar
-          title="Askify"
-          iconElementLeft={
-            <IconButton onClick={this.handleToggle}>
+      <div style={style.root}>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton edge="start" color="inherit" aria-label="Menu" onClick={this.handleToggle}>
               <MenuIcon />
             </IconButton>
-          }
-          iconElementRight={
-            localStorage.getItem('id_token') &&
-            <TopUserInfo
-              userInfo={userinfo}
-              signOut={this.signOut}
-            />
-          }
-        />
-        <Drawer
-          docked={false}
-          width={200}
-          open={this.state.open}
-          onRequestChange={open => this.setState({ open })}
-        >
-          <MenuItem
-            onClick={this.handleClose}
-            containerElement={<Link to="/" />}
-          >
-            <FlatButton
-              style={{ backgroundColor: 'transparent' }}
-              icon={<FontIcon className="material-icons">home</FontIcon>}
-              label="Home"
-            />
-          </MenuItem>
-          <MenuItem onClick={this.handleClose}>
-            <FlatButton
-              style={{ backgroundColor: 'transparent' }}
-              icon={<FontIcon className="material-icons">close</FontIcon>}
-              label="Close"
-            />
-          </MenuItem>
+            <Typography variant="h5" style={style.title}>
+              Askify
+            </Typography>
+            {this.isAuth() && <TopUserInfo userInfo={userinfo} signOut={this.signOut} />}
+          </Toolbar>
+        </AppBar>
+        <Drawer open={this.state.open} onClose={this.handleClose}>
+          <List style={style.list}>
+            <Link component={RouterLink} to="/" style={style.link}>
+              <ListItem button key="home" onClick={this.handleClose}>
+                <ListItemIcon><HomeIcon /></ListItemIcon>
+                <ListItemText primary="HOME" />
+              </ListItem>
+            </Link>
+            <ListItem button key="close" onClick={this.handleClose}>
+              <ListItemIcon><CloseIcon /></ListItemIcon>
+              <ListItemText primary="CLOSE" />
+            </ListItem>
+          </List>
         </Drawer>
         {this.props.children}
       </div>
