@@ -4,7 +4,7 @@
 
 ## About
 
-A question based real-time web application made with React, Redux, Express and RethinkDB. 🙋 
+A question based real-time web application made with React, Redux, Express and RethinkDB. 🙋🏻‍♂️
 
 ## Application Architecture
 
@@ -17,7 +17,7 @@ A question based real-time web application made with React, Redux, Express and R
 ## Installation
 
 **Step 1.** [Install RethinkDB](https://www.rethinkdb.com/docs/install/).  
-**Step 2.** Install [Node.js](https://nodejs.org/) v6 (or newer).
+**Step 2.** Install [Node.js](https://nodejs.org/) v8 (or newer).
 
 ## Start locally
 
