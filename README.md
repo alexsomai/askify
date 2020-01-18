@@ -6,6 +6,9 @@
 
 A question based real-time web application made with React, Redux, Express and RethinkDB. 🙋🏻‍♂️
 
+## Demo
+[![Askify demo](https://i.imgur.com/o8WJnJN.png)](https://vimeo.com/385663525 "Askify demo (click to watch)")
+
 ## Application Architecture
 
 ### Overall Architecture
