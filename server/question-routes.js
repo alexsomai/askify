@@ -6,7 +6,7 @@ const jwtDecode = require('jwt-decode');
 const app = module.exports = express.Router();
 const db = require('./db');
 
-const jwtCheck = expressJwt({ secret: config.secret });
+const jwtCheck = expressJwt({ secret: config.secret, algorithms: ['HS256'] });
 
 app.use('/questions', jwtCheck);
 
